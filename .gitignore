@@ -1,0 +1,21 @@
+# Diretórios de build
+/target/
+
+# Arquivos de log
+*.log
+
+# Arquivos temporários de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Configurações específicas de IDEs (ex: Eclipse, IntelliJ)
+*.iml
+.idea/
+*.classpath
+*.project
+.settings/
+
+# Arquivos de segurança/sensíveis
+application.properties
+application.yml
+ão são globais
