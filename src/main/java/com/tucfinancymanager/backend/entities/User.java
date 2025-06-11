@@ -45,7 +45,7 @@ public class User {
 
     @Schema(example = "3500.00", requiredMode = RequiredMode.REQUIRED, description = "Renda mensal do usuário" )
     @PositiveOrZero(message = "A renda mensal não pode ser negativa")
-    private Double monthly_income;
+    private Double monthlyIncome;
 
 
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
@@ -56,9 +56,9 @@ public class User {
     private String password;
 
     @CreationTimestamp
-    private Timestamp created_at;
+    private Timestamp createdAt;
 
     @UpdateTimestamp
-    private Timestamp updated_at;
+    private Timestamp updatedAt;
 
 }

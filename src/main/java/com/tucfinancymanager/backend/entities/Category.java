@@ -18,18 +18,18 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Categories {
+public class Category {
 
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Schema(example = "Alimentação", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nome da Categoria")
-    private String category_name;
+    private String categoryName;
 
     @CreationTimestamp
-    private Timestamp created_at;
+    private Timestamp createdAt;
 
     @UpdateTimestamp
-    private Timestamp updated_at;
+    private Timestamp updatedAt;
 
 }

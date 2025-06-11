@@ -15,21 +15,22 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubCategories {
+public class SubCategory {
 
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
+    @JoinColumn(name = "categoryId")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id da Categoria")
-    private Categories category;
+    private Category category;
 
     @Schema(example = "Restaurante", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nome da subcategoria")
-    private String subcategory_name;
+    private String subcategoryName;
 
     @CreationTimestamp
-    private Timestamp created_at;
+    private Timestamp createdAt;
 
     @UpdateTimestamp
-    private Timestamp updated_at;
+    private Timestamp updatedAt;
 }

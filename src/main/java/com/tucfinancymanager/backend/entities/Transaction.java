@@ -18,25 +18,27 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Transactions {
+public class Transaction {
 
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
+    @JoinColumn(name = "userId")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id do usuario")
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "subcategoryId")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id da subcategoria")
-    private SubCategories subcategory;
+    private SubCategory subCategory;
 
     @Enumerated(EnumType.STRING)
     @Schema(example = "Monthly ",requiredMode = Schema.RequiredMode.REQUIRED, description = "Tipo de Transação")
-    private TransactionTypeEnum transaction_type;
+    private TransactionTypeEnum transactionType;
 
     @Schema(example = "250.75", requiredMode = Schema.RequiredMode.REQUIRED, description = "Valor monetário da transação")
-    private Double transaction_value;
+    private Double transactionValue;
 
     @Schema(example = "Pagamento da fatura do cartão", description = "Descrição adicional da transação")
     private String description;
@@ -46,17 +48,17 @@ public class Transactions {
 
     @Enumerated(EnumType.STRING)
     @Schema(example = "PENDING", description = "Status da transação: PENDING, COMPLETED etc.")
-    private TransactionStatusEnum transaction_status;
+    private TransactionStatusEnum transactionStatus;
 
     @Enumerated(EnumType.STRING)
     @Schema(example = "MONTHLY", description = "Frequência da recorrência, se aplicável: DAILY, WEEKLY, MONTHLY, YEARLY")
-    private TransactionRecurrenceFrequencyEnum recurrence_frequency;
+    private TransactionRecurrenceFrequencyEnum recurrenceFrequency;
 
     @CreationTimestamp
-    private Timestamp created_at;
+    private Timestamp createdAt;
 
     @UpdateTimestamp
-    private Timestamp updated_at;
+    private Timestamp updatedAt;
 
 
 }
