@@ -5,6 +5,7 @@ import com.tucfinancymanager.backend.ENUMs.TransactionStatusEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,26 +25,32 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @NotEmpty()
     @ManyToOne
     @JoinColumn(name = "userId")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id do usuario")
     private User user;
 
+    @NotEmpty()
     @ManyToOne
     @JoinColumn(name = "subcategoryId")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id da subcategoria")
     private SubCategory subCategory;
 
+    @NotEmpty()
     @Enumerated(EnumType.STRING)
     @Schema(example = "Monthly ",requiredMode = Schema.RequiredMode.REQUIRED, description = "Tipo de Transação")
     private TransactionTypeEnum transactionType;
 
+    @NotEmpty()
     @Schema(example = "250.75", requiredMode = Schema.RequiredMode.REQUIRED, description = "Valor monetário da transação")
     private Double transactionValue;
 
+    @NotEmpty()
     @Schema(example = "Pagamento da fatura do cartão", description = "Descrição adicional da transação")
     private String description;
 
+    @NotEmpty()
     @Enumerated(EnumType.STRING)
     @Schema(example = "PENDING", description = "Status da transação: PENDING, COMPLETED etc.")
     private TransactionStatusEnum transactionStatus;

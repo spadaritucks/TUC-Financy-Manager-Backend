@@ -5,6 +5,7 @@ import com.tucfinancymanager.backend.ENUMs.TransactionStatusEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,30 +27,38 @@ public class FutureTransaction {
     @ManyToOne
     @JoinColumn(name = "userId")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id do usuario")
+    @NotEmpty()
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "subcategoryId")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id da subcategoria")
+    @NotEmpty()
     private SubCategory subCategory;
 
     @Enumerated(EnumType.STRING)
     @Schema(example = "Monthly ",requiredMode = Schema.RequiredMode.REQUIRED, description = "Tipo de Transação")
+    @NotEmpty()
     private TransactionTypeEnum transactionType;
 
+    @NotEmpty()
     @Schema(example = "250.75", requiredMode = Schema.RequiredMode.REQUIRED, description = "Valor monetário da transação")
     private Double transactionValue;
 
+    @NotEmpty()
     @Schema(example = "Pagamento da fatura do cartão", description = "Descrição adicional da transação")
     private String description;
 
+    @NotEmpty()
     @Schema(example = "true", description = "Indica se a transação é recorrente (mensal, semanal, etc.)")
     private Boolean recurrent;
 
+    @NotEmpty()
     @Enumerated(EnumType.STRING)
     @Schema(example = "PENDING", description = "Status da transação: PENDING, COMPLETED etc.")
     private TransactionStatusEnum transactionStatus;
 
+    @NotEmpty()
     @Enumerated(EnumType.STRING)
     @Schema(example = "MONTHLY", description = "Frequência da recorrência, se aplicável: DAILY, WEEKLY, MONTHLY, YEARLY")
     private TransactionRecurrenceFrequencyEnum recurrenceFrequency;
