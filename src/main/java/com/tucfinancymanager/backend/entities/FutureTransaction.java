@@ -14,14 +14,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-@Entity(name = "transactions")
+@Entity(name = "future_transactions")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Transaction {
+public class FutureTransaction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
@@ -44,14 +43,22 @@ public class Transaction {
     @Schema(example = "Pagamento da fatura do cartão", description = "Descrição adicional da transação")
     private String description;
 
+    @Schema(example = "true", description = "Indica se a transação é recorrente (mensal, semanal, etc.)")
+    private Boolean recurrent;
+
     @Enumerated(EnumType.STRING)
     @Schema(example = "PENDING", description = "Status da transação: PENDING, COMPLETED etc.")
     private TransactionStatusEnum transactionStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Schema(example = "MONTHLY", description = "Frequência da recorrência, se aplicável: DAILY, WEEKLY, MONTHLY, YEARLY")
+    private TransactionRecurrenceFrequencyEnum recurrenceFrequency;
 
     @CreationTimestamp
     private Timestamp createdAt;
 
     @UpdateTimestamp
     private Timestamp updatedAt;
+
 
 }
