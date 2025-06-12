@@ -24,8 +24,6 @@ public class Category {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotEmpty()
-    @Schema(example = "Alimentação", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nome da Categoria")
     private String categoryName;
 
     @CreationTimestamp

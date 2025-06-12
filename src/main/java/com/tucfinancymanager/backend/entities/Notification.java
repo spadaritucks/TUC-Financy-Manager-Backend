@@ -25,34 +25,26 @@ public class Notification {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Usuário que receberá a notificação")
     private User user;
 
-    @NotNull
+
     @Enumerated(EnumType.STRING)
-    @Schema(example = "TRANSACTION", requiredMode = Schema.RequiredMode.REQUIRED, description = "Tipo da Notificação")
     private NotificationTypeEnum notificationType;
 
     @ManyToOne
     @JoinColumn(name = "transaction_id")
-    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "Transação relacionada à notificação (se aplicável)")
     private Transaction transaction;
 
     @ManyToOne
     @JoinColumn(name = "future_transaction_id")
-    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "Transação futura relacionada à notificação (se aplicável)")
     private FutureTransaction futureTransaction;
 
     @ManyToOne
     @JoinColumn(name = "goal_id")
-    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "Meta relacionada à notificação (se aplicável)")
     private Goal goal;
 
-    @NotNull
-    @Schema(example = "Falta 1 dia para o pagamento", requiredMode = Schema.RequiredMode.REQUIRED, description = "Mensagem da Notificação")
     private String message;
 
-    @Schema(example = "true",requiredMode = Schema.RequiredMode.REQUIRED, description = "Verficiação se a mensagem foi lida ou não")
     private Boolean notificationStatus;
 
     @CreationTimestamp

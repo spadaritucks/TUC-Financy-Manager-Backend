@@ -21,14 +21,11 @@ public class SubCategory {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotEmpty()
+
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id da Categoria")
     private Category category;
 
-    @NotEmpty()
-    @Schema(example = "Restaurante", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nome da subcategoria")
     private String subcategoryName;
 
     @CreationTimestamp
