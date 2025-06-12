@@ -24,10 +24,10 @@ public class Notification {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id" ,nullable = false)
     private User user;
 
-
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private NotificationTypeEnum notificationType;
 
@@ -43,8 +43,10 @@ public class Notification {
     @JoinColumn(name = "goal_id")
     private Goal goal;
 
+    @Column(nullable = false)
     private String message;
 
+    @Column(nullable = false)
     private Boolean notificationStatus;
 
     @CreationTimestamp

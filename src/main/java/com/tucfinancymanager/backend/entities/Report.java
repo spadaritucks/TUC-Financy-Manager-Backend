@@ -1,5 +1,6 @@
 package com.tucfinancymanager.backend.entities;
 
+import com.tucfinancymanager.backend.ENUMs.ReportTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -23,8 +24,12 @@ public class Report {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ReportTypeEnum reportType;
 
     @ManyToOne
     @JoinColumn(name = "transaction_id")
@@ -38,8 +43,10 @@ public class Report {
     @JoinColumn(name = "goal_id")
     private Goal goal;
 
+    @Column(nullable = false)
     private Timestamp startDate;
 
+    @Column(nullable = false)
     private Timestamp endDate;
 
     @CreationTimestamp

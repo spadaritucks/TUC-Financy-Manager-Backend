@@ -16,7 +16,11 @@ import java.util.UUID;
 public class NotificationRequestDTO {
 
     @NotNull(message = "O id do usuário é obrigatório")
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Usuário que receberá a notificação")
+    @Schema(
+            example = "123e4567-e89b-12d3-a456-426614174000",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            description = "Usuário que receberá a notificação"
+    )
     private UUID userId;
 
     @NotNull(message = "O tipo da notificação é obrigatório")
@@ -27,20 +31,40 @@ public class NotificationRequestDTO {
     )
     private NotificationTypeEnum notificationType;
 
-    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "Transação relacionada à notificação (se aplicável)")
+    @Schema(
+            example = "111e2222-e89b-12d3-a456-426614174000",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+            description = "Transação relacionada à notificação (se aplicável)"
+    )
     private UUID transactionId;
 
-    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "Transação futura relacionada à notificação (se aplicável)")
+    @Schema(
+            example = "222e3333-e89b-12d3-a456-426614174000",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+            description = "Transação futura relacionada à notificação (se aplicável)"
+    )
     private UUID futureTransactionId;
 
-    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "Meta relacionada à notificação (se aplicável)")
+    @Schema(
+            example = "333e4444-e89b-12d3-a456-426614174000",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+            description = "Meta relacionada à notificação (se aplicável)"
+    )
     private UUID goalId;
 
     @NotBlank(message = "A mensagem da notificação é obrigatória")
-    @Schema(example = "Falta 1 dia para o pagamento", requiredMode = Schema.RequiredMode.REQUIRED, description = "Mensagem da Notificação")
+    @Schema(
+            example = "Falta 1 dia para o pagamento",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            description = "Mensagem da Notificação"
+    )
     private String message;
 
     @NotNull(message = "O status da notificação é obrigatório")
-    @Schema(example = "true", requiredMode = Schema.RequiredMode.REQUIRED, description = "Verificação se a mensagem foi lida ou não")
+    @Schema(
+            example = "false",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            description = "Verificação se a mensagem foi lida ou não"
+    )
     private Boolean notificationStatus;
 }

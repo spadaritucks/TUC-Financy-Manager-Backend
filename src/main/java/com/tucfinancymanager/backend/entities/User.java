@@ -2,10 +2,7 @@ package com.tucfinancymanager.backend.entities;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -31,14 +28,19 @@ public class User {
 
     private String userPhoto;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String phone;
 
+    @Column(nullable = false)
     private Double monthlyIncome;
 
+    @Column(nullable = false)
     private String password;
 
     @CreationTimestamp

@@ -15,7 +15,7 @@ import java.util.UUID;
 public class SubCategoryRequestDTO {
 
     @NotNull(message = "O id da categoria é obrigatório")
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id da Categoria")
+    @Schema(example = "123e4567-e89b-12d3-a456-426614174000",requiredMode = Schema.RequiredMode.REQUIRED, description = "Id da Categoria")
     private UUID categoryId;
 
     @NotBlank(message = "O nome da subcategoria é obrigatório")

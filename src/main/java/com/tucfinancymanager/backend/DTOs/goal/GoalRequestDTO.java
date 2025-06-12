@@ -18,33 +18,32 @@ import java.util.UUID;
 @NoArgsConstructor
 public class GoalRequestDTO {
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id do usuário")
     @NotNull(message = "O id do usuário é obrigatório")
+    @Schema(example = "123e4567-e89b-12d3-a456-426614174000", requiredMode = Schema.RequiredMode.REQUIRED, description = "Id do usuário")
     private UUID userId;
 
-    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "Id da subcategoria")
+    @Schema(example = "9a7b6c5d-4e3f-2a1b-0c9d-8e7f6a5b4c3d", requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "Id da subcategoria")
     private UUID subCategoryId;
 
-    @Schema(example = "Juntar 100 reais por mês", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nome da Meta")
     @NotBlank(message = "O nome da meta é obrigatório")
     @Size(min = 3, max = 100, message = "O nome da meta deve ter entre 3 e 100 caracteres")
+    @Schema(example = "Juntar 100 reais por mês", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nome da Meta")
     private String goalName;
 
-    @Schema(example = "2000.00", requiredMode = Schema.RequiredMode.REQUIRED, description = "Valor da meta")
     @NotNull(message = "O valor da meta é obrigatório")
     @Positive(message = "O valor da meta deve ser maior que zero")
+    @Schema(example = "2000.00", requiredMode = Schema.RequiredMode.REQUIRED, description = "Valor da meta")
     private Double targetValue;
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Data inicial da meta")
     @NotNull(message = "A data de início é obrigatória")
+    @Schema(example = "2025-01-01T00:00:00", requiredMode = Schema.RequiredMode.REQUIRED, description = "Data inicial da meta (formato: yyyy-MM-dd'T'HH:mm:ss)")
     private Timestamp startDate;
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Data final da meta")
     @NotNull(message = "A data de término é obrigatória")
+    @Schema(example = "2025-12-31T00:00:00", requiredMode = Schema.RequiredMode.REQUIRED, description = "Data final da meta (formato: yyyy-MM-dd'T'HH:mm:ss)")
     private Timestamp endDate;
 
-    @Schema(example = "IN_PROGRESS", requiredMode = Schema.RequiredMode.REQUIRED, description = "Status da meta. Valores possíveis: IN_PROGRESS, COMPLETED, CANCELED")
     @NotNull(message = "O status da meta é obrigatório")
+    @Schema(example = "IN_PROGRESS", requiredMode = Schema.RequiredMode.REQUIRED, description = "Status da meta. Valores possíveis: IN_PROGRESS, COMPLETED, CANCELED")
     private GoalStatus goalStatus;
 }
-

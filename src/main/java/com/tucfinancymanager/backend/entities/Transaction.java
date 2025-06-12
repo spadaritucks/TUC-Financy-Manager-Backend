@@ -23,20 +23,24 @@ public class Transaction {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "subcategory_id")
     private SubCategory subCategory;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TransactionTypeEnum transactionType;
 
+    @Column(nullable = false)
     private Double transactionValue;
+
 
     private String description;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TransactionStatusEnum transactionStatus;
 
