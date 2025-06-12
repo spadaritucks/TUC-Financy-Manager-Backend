@@ -1,10 +1,11 @@
 package com.tucfinancymanager.backend.DTOs.transaction;
 
-import com.tucfinancymanager.backend.ENUMs.TransactionRecurrenceFrequencyEnum;
+
 import com.tucfinancymanager.backend.ENUMs.TransactionStatusEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,7 @@ public class TransactionRequestDTO {
 
     @Schema(description = "Descrição da transação", example = "Pagamento da fatura do cartão")
     @Size(max = 255, message = "A descrição deve ter no máximo 255 caracteres")
+    @Pattern(regexp = "^$|^(?!\\s*$).+", message = "A descrição não pode ser vazia ou apenas espaços")
     private String description;
 
     @Schema(description = "Status da transação", example = "PENDING", requiredMode = Schema.RequiredMode.REQUIRED)

@@ -2,6 +2,7 @@ package com.tucfinancymanager.backend.DTOs.goal;
 
 import com.tucfinancymanager.backend.ENUMs.GoalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Positive;
@@ -25,7 +26,7 @@ public class GoalRequestDTO {
     private UUID subCategoryId;
 
     @Schema(example = "Juntar 100 reais por mês", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nome da Meta")
-    @NotNull(message = "O nome da meta é obrigatório")
+    @NotBlank(message = "O nome da meta é obrigatório")
     @Size(min = 3, max = 100, message = "O nome da meta deve ter entre 3 e 100 caracteres")
     private String goalName;
 
@@ -42,7 +43,8 @@ public class GoalRequestDTO {
     @NotNull(message = "A data de término é obrigatória")
     private Timestamp endDate;
 
-    @Schema(example = "IN_PROGRESS", requiredMode = Schema.RequiredMode.REQUIRED, description = "Status da meta")
+    @Schema(example = "IN_PROGRESS", requiredMode = Schema.RequiredMode.REQUIRED, description = "Status da meta. Valores possíveis: IN_PROGRESS, COMPLETED, CANCELED")
     @NotNull(message = "O status da meta é obrigatório")
     private GoalStatus goalStatus;
 }
+

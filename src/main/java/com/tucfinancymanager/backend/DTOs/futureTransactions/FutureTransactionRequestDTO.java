@@ -4,6 +4,7 @@ import com.tucfinancymanager.backend.ENUMs.TransactionRecurrenceFrequencyEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionStatusEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -26,7 +27,7 @@ public class FutureTransactionRequestDTO {
     @NotNull(message = "O id da subcategoria é obrigatório")
     private UUID subCategoryId;
 
-    @Schema(description = "Tipo de Transação", example = "INCOME", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Tipo de Transação. Valores: INCOME, EXPENSE", example = "INCOME", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "O tipo da transação é obrigatório")
     private TransactionTypeEnum transactionType;
 
@@ -35,18 +36,20 @@ public class FutureTransactionRequestDTO {
     @Positive(message = "O valor da transação deve ser positivo")
     private Double transactionValue;
 
-    @Schema(description = "Descrição da transação", example = "Pagamento da fatura do cartão")
+    @Schema(description = "Descrição da transação", example = "Pagamento da fatura do cartão", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "A descrição é obrigatória")
     @Size(max = 255, message = "A descrição deve ter no máximo 255 caracteres")
     private String description;
 
-    @Schema(description = "Indica se a transação é recorrente", example = "true")
+    @Schema(description = "Indica se a transação é recorrente", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "O campo de recorrência é obrigatório")
     private Boolean recurrent;
 
-    @Schema(description = "Status da transação", example = "PENDING", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Status da transação. Valores: PENDING, COMPLETED, CANCELED", example = "PENDING", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "O status da transação é obrigatório")
     private TransactionStatusEnum transactionStatus;
 
-    @Schema(description = "Frequência da recorrência", example = "MONTHLY", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Frequência da recorrência. Valores: DAILY, WEEKLY, MONTHLY, YEARLY", example = "MONTHLY", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "A frequência da recorrência é obrigatória")
     private TransactionRecurrenceFrequencyEnum recurrenceFrequency;
 }
