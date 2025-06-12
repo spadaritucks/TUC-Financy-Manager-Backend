@@ -23,7 +23,7 @@ public class SubCategory {
 
     @NotEmpty()
     @ManyToOne
-    @JoinColumn(name = "categoryId")
+    @JoinColumn(name = "category_id")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id da Categoria")
     private Category category;
 

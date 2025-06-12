@@ -6,6 +6,7 @@ import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,20 +26,20 @@ public class FutureTransaction {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id do usuario")
     @NotEmpty()
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "subcategoryId")
+    @JoinColumn(name = "subcategory_id")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id da subcategoria")
     @NotEmpty()
     private SubCategory subCategory;
 
     @Enumerated(EnumType.STRING)
     @Schema(example = "Monthly ",requiredMode = Schema.RequiredMode.REQUIRED, description = "Tipo de Transação")
-    @NotEmpty()
+    @NotNull()
     private TransactionTypeEnum transactionType;
 
     @NotEmpty()
@@ -53,12 +54,12 @@ public class FutureTransaction {
     @Schema(example = "true", description = "Indica se a transação é recorrente (mensal, semanal, etc.)")
     private Boolean recurrent;
 
-    @NotEmpty()
+    @NotNull()
     @Enumerated(EnumType.STRING)
     @Schema(example = "PENDING", description = "Status da transação: PENDING, COMPLETED etc.")
     private TransactionStatusEnum transactionStatus;
 
-    @NotEmpty()
+    @NotNull()
     @Enumerated(EnumType.STRING)
     @Schema(example = "MONTHLY", description = "Frequência da recorrência, se aplicável: DAILY, WEEKLY, MONTHLY, YEARLY")
     private TransactionRecurrenceFrequencyEnum recurrenceFrequency;

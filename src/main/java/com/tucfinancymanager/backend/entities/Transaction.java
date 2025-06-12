@@ -6,6 +6,7 @@ import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,17 +28,17 @@ public class Transaction {
 
     @NotEmpty()
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id do usuario")
     private User user;
 
     @NotEmpty()
     @ManyToOne
-    @JoinColumn(name = "subcategoryId")
+    @JoinColumn(name = "subcategory_id")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Id da subcategoria")
     private SubCategory subCategory;
 
-    @NotEmpty()
+    @NotNull()
     @Enumerated(EnumType.STRING)
     @Schema(example = "Monthly ",requiredMode = Schema.RequiredMode.REQUIRED, description = "Tipo de Transação")
     private TransactionTypeEnum transactionType;
@@ -50,7 +51,7 @@ public class Transaction {
     @Schema(example = "Pagamento da fatura do cartão", description = "Descrição adicional da transação")
     private String description;
 
-    @NotEmpty()
+    @NotNull()
     @Enumerated(EnumType.STRING)
     @Schema(example = "PENDING", description = "Status da transação: PENDING, COMPLETED etc.")
     private TransactionStatusEnum transactionStatus;
