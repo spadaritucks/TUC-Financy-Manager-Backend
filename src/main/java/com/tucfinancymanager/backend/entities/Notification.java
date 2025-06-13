@@ -1,15 +1,13 @@
 package com.tucfinancymanager.backend.entities;
 
 import com.tucfinancymanager.backend.ENUMs.NotificationTypeEnum;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -24,7 +22,7 @@ public class Notification {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id" ,nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
