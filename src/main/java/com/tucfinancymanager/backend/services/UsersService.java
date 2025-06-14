@@ -2,6 +2,7 @@ package com.tucfinancymanager.backend.services;
 
 import com.tucfinancymanager.backend.DTOs.user.UserRequestDTO;
 import com.tucfinancymanager.backend.entities.User;
+import com.tucfinancymanager.backend.exceptions.ConflictException;
 import com.tucfinancymanager.backend.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,12 @@ public class UsersService {
     }
 
     public User createUsers (UserRequestDTO userRequestDTO){
+
+        var userExists = this.usersRepository.findUserByEmail(userRequestDTO.getEmail());
+        if(userExists.isPresent()){
+            throw new ConflictException("O Usuario já existe no sistema");
+        }
+
         User user = new User();
         user.setUserPhoto(userRequestDTO.getUserPhoto());
         user.setName(userRequestDTO.getName());
