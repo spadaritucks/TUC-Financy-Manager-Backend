@@ -1,5 +1,5 @@
 CREATE TABLE users (
-   id CHAR(36) PRIMARY KEY NOT NULL,
+   id BINARY(16) PRIMARY KEY NOT NULL,
    user_photo TEXT,
    name VARCHAR(255) NOT NULL,
    email VARCHAR(255) NOT NULL UNIQUE,
@@ -11,15 +11,15 @@ CREATE TABLE users (
 );
 
 CREATE TABLE categories (
-   id CHAR(36) PRIMARY KEY NOT NULL,
+   id BINARY(16) PRIMARY KEY NOT NULL,
    category_name VARCHAR(50) NOT NULL,
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE subcategories (
-   id CHAR(36) PRIMARY KEY NOT NULL,
-   category_id CHAR(36) NOT NULL,
+   id BINARY(16) PRIMARY KEY NOT NULL,
+   category_id BINARY(16) NOT NULL,
    subcategory_name VARCHAR(50) NOT NULL,
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -27,9 +27,9 @@ CREATE TABLE subcategories (
 );
 
 CREATE TABLE transactions (
-   id CHAR(36) PRIMARY KEY NOT NULL,
-   user_id CHAR(36) NOT NULL,
-   subcategory_id CHAR(36),
+   id BINARY(16) PRIMARY KEY NOT NULL,
+   user_id BINARY(16) NOT NULL,
+   subcategory_id BINARY(16),
    transaction_type VARCHAR(50) NOT NULL,
    transaction_value DECIMAL(10,2) NOT NULL,
    description TEXT,
@@ -41,9 +41,9 @@ CREATE TABLE transactions (
 );
 
 CREATE TABLE future_transactions (
-   id CHAR(36) PRIMARY KEY NOT NULL,
-   user_id CHAR(36) NOT NULL,
-   subcategory_id CHAR(36),
+   id BINARY(16) PRIMARY KEY NOT NULL,
+   user_id BINARY(16) NOT NULL,
+   subcategory_id BINARY(16),
    transaction_type VARCHAR(50) NOT NULL,
    transaction_value DECIMAL(10,2) NOT NULL,
    description TEXT,
@@ -57,9 +57,9 @@ CREATE TABLE future_transactions (
 );
 
 CREATE TABLE goals (
-   id CHAR(36) PRIMARY KEY NOT NULL,
-   user_id CHAR(36) NOT NULL,
-   subcategory_id CHAR(36),
+   id BINARY(16) PRIMARY KEY NOT NULL,
+   user_id BINARY(16) NOT NULL,
+   subcategory_id BINARY(16),
    goal_name VARCHAR(50) NOT NULL,
    target_value DECIMAL(10,2) NOT NULL,
    start_date TIMESTAMP NOT NULL,
@@ -72,12 +72,12 @@ CREATE TABLE goals (
 );
 
 CREATE TABLE reports (
-   id CHAR(36) PRIMARY KEY NOT NULL,
-   user_id CHAR(36) NOT NULL,
+   id BINARY(16) PRIMARY KEY NOT NULL,
+   user_id BINARY(16) NOT NULL,
    report_type VARCHAR(50) NOT NULL,
-   transaction_id CHAR(36),
-   future_transaction_id CHAR(36),
-   goal_id CHAR(36),
+   transaction_id BINARY(16),
+   future_transaction_id BINARY(16),
+   goal_id BINARY(16),
    start_date TIMESTAMP NOT NULL,
    end_date TIMESTAMP NOT NULL,
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -89,12 +89,12 @@ CREATE TABLE reports (
 );
 
 CREATE TABLE notifications (
-   id CHAR(36) PRIMARY KEY NOT NULL,
-   user_id CHAR(36) NOT NULL,
+   id BINARY(16) PRIMARY KEY NOT NULL,
+   user_id BINARY(16) NOT NULL,
    notification_type VARCHAR(50) NOT NULL,
-   transaction_id CHAR(36),
-   future_transaction_id CHAR(36),
-   goal_id CHAR(36),
+   transaction_id BINARY(16),
+   future_transaction_id BINARY(16),
+   goal_id BINARY(16),
    message VARCHAR(500) NOT NULL,
    notification_status BOOLEAN NOT NULL,
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
