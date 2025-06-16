@@ -21,13 +21,12 @@ public class SubCategory {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @Column(nullable = false)
-    private String subcategoryName;
+    private String subCategoryName;
 
     @CreationTimestamp
     private Timestamp createdAt;

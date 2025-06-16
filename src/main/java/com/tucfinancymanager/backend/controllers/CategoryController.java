@@ -35,7 +35,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Lista de categorias retornada com sucesso", content = {
                     @Content(mediaType = "application/json",
                             array = @ArraySchema(
-                                    schema = @Schema(implementation = UserResponseDTO.class)
+                                    schema = @Schema(implementation = CategoryResponseDTO.class)
                             ))
             })
     })
@@ -48,7 +48,7 @@ public class CategoryController {
     @Operation(summary = "Cadastro da categoria", description = "Essa função é responsável por cadastrar a categoria")
     @ApiResponses({
             @ApiResponse(responseCode = "201", content = {
-                    @Content(schema = @Schema(implementation = UserResponseDTO.class))
+                    @Content(schema = @Schema(implementation = CategoryResponseDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Dados Invalidos"),
             @ApiResponse(responseCode = "409", description = "A categoria já existe no sistema")
@@ -62,7 +62,7 @@ public class CategoryController {
     @Operation(summary = "Atualização da categoria", description = "Essa função é responsável por atualizar a categoria")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = UserResponseDTO.class))
+                    @Content(schema = @Schema(implementation = CategoryResponseDTO.class))
             }),
             @ApiResponse(responseCode = "404", description = "A categoria não existe")
     })
@@ -76,7 +76,7 @@ public class CategoryController {
     @Operation(summary = "Exclusão da categoria", description = "Essa função é responsável por excluir a categoria")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = UserResponseDTO.class))
+                    @Content(schema = @Schema(implementation = CategoryResponseDTO.class))
             }),
             @ApiResponse(responseCode = "404", description = "A categoria não existe")
     })

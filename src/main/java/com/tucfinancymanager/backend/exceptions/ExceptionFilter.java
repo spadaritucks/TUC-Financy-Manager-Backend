@@ -25,7 +25,7 @@ public class ExceptionFilter  {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<ErrorResponseDTO>> argumentNotValidExceptionHandler (MethodArgumentNotValidException e) {
+    public ResponseEntity<List<ErrorResponseDTO>> argumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
         List<ErrorResponseDTO> errorResponse = new ArrayList<>();
 
         e.getBindingResult().getFieldErrors().forEach(err -> {
