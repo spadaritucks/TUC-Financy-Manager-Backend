@@ -44,6 +44,7 @@ public class SubCategoryController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+
     @PostMapping
     @Operation(summary = "Cadastro da subcategoria", description = "Essa função é responsável por cadastrar a subcategoria")
     @ApiResponses({
@@ -59,8 +60,8 @@ public class SubCategoryController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
 
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
     @Operation(summary = "Atualização da subcategoria", description = "Essa função é responsável por atualizar a subcategoria")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -72,6 +73,7 @@ public class SubCategoryController {
         var result = this.subCategoryService.updateSubCategory(id,subCategoryRequestUpdateDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Exclusão da subcategoria", description = "Essa função é responsável por excluir a subcategoria")

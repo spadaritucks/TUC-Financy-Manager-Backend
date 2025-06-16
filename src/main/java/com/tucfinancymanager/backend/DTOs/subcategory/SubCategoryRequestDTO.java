@@ -22,5 +22,5 @@ public class SubCategoryRequestDTO {
     @NotBlank(message = "O nome da subcategoria é obrigatório")
     @Size(max = 100, message = "O nome da categoria deve ter no máximo 100 caracteres")
     @Schema(example = "Restaurante", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nome da subcategoria")
-    private String subCategoryName;
+    private String subcategoryName;
 }

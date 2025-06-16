@@ -17,6 +17,6 @@ public class SubCategoryRequestUpdateDTO {
 
     @Schema(example = "Restaurante", requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "Nome da subcategoria")
     @Size(max = 100, message = "O nome da categoria deve ter no máximo 100 caracteres")
-    private String subCategoryName;
+    private String subcategoryName;
 
 }

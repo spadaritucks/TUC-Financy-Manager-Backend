@@ -26,7 +26,7 @@ public class SubCategory {
     private Category category;
 
     @Column(nullable = false)
-    private String subCategoryName;
+    private String subcategoryName;
 
     @CreationTimestamp
     private Timestamp createdAt;

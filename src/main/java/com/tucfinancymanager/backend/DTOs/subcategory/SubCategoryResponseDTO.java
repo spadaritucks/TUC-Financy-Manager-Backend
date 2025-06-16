@@ -23,7 +23,7 @@ public class SubCategoryResponseDTO {
 
 
     @Schema(example = "Restaurante", description = "Nome da subcategoria")
-    private String subCategoryName;
+    private String subcategoryName;
 
     @Schema(description = "Registro de quanto a criação foi feita", example = "2025-06-16T14:21:00.914+00:00")
     private Timestamp created_at;

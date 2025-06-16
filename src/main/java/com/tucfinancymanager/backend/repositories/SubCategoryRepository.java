@@ -7,5 +7,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface SubCategoryRepository extends JpaRepository<SubCategory, UUID> {
-    Optional<SubCategory> getBySubCategoryName(String subcategoryName);
+    Optional<SubCategory> getBySubcategoryName(String subcategoryName);
 }

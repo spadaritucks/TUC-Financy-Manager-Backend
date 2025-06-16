@@ -20,6 +20,7 @@ public class SubCategoryService {
     @Autowired
     private SubCategoryRepository subCategoryRepository;
 
+    @Autowired
     private CategoryRepository categoryRepository;
 
     public List<SubCategoryResponseDTO> getAllSubCategories() {
@@ -27,7 +28,7 @@ public class SubCategoryService {
         return subcategories.stream().map(subcategory -> new SubCategoryResponseDTO(
                 subcategory.getId(),
                 subcategory.getCategory().getId(),
-                subcategory.getSubCategoryName(),
+                subcategory.getSubcategoryName(),
                 subcategory.getCreatedAt(),
                 subcategory.getUpdatedAt()
         )).toList();
@@ -35,7 +36,7 @@ public class SubCategoryService {
     }
 
     public SubCategoryResponseDTO createSubCategory(SubCategoryRequestDTO subCategoryRequestDTO) {
-        var subCategoryExists = this.subCategoryRepository.getBySubCategoryName(subCategoryRequestDTO.getSubCategoryName());
+        var subCategoryExists = this.subCategoryRepository.getBySubcategoryName(subCategoryRequestDTO.getSubcategoryName());
         if(subCategoryExists.isPresent()){
             throw new ConflictException("A subcategoria já existe no sistema");
         }
@@ -44,14 +45,14 @@ public class SubCategoryService {
 
         SubCategory subCategory = new SubCategory();
         subCategory.setCategory(category);
-        subCategory.setSubCategoryName(subCategoryRequestDTO.getSubCategoryName());
+        subCategory.setSubcategoryName(subCategoryRequestDTO.getSubcategoryName());
 
         subCategoryRepository.save(subCategory);
 
         return new SubCategoryResponseDTO(
                 subCategory.getId(),
                 subCategory.getCategory().getId(),
-                subCategory.getSubCategoryName(),
+                subCategory.getSubcategoryName(),
                 subCategory.getCreatedAt(),
                 subCategory.getUpdatedAt()
         );
@@ -64,15 +65,15 @@ public class SubCategoryService {
                 () -> new NotFoundException("A subcategoria não existe")
         );
 
-        if(subCategoryRequestUpdateDTO.getSubCategoryName() != null)
-            subCategory.setSubCategoryName(subCategoryRequestUpdateDTO.getSubCategoryName());
+        if(subCategoryRequestUpdateDTO.getSubcategoryName() != null)
+            subCategory.setSubcategoryName(subCategoryRequestUpdateDTO.getSubcategoryName());
 
         subCategoryRepository.save(subCategory);
 
         return new SubCategoryResponseDTO(
                 subCategory.getId(),
                 subCategory.getCategory().getId(),
-                subCategory.getSubCategoryName(),
+                subCategory.getSubcategoryName(),
                 subCategory.getCreatedAt(),
                 subCategory.getUpdatedAt()
         );
@@ -88,7 +89,7 @@ public class SubCategoryService {
         return new SubCategoryResponseDTO(
                 subCategory.getId(),
                 subCategory.getCategory().getId(),
-                subCategory.getSubCategoryName(),
+                subCategory.getSubcategoryName(),
                 subCategory.getCreatedAt(),
                 subCategory.getUpdatedAt()
         );
