@@ -1,8 +1,11 @@
 package com.tucfinancymanager.backend.services;
 
 import com.tucfinancymanager.backend.DTOs.user.UserRequestDTO;
+import com.tucfinancymanager.backend.DTOs.user.UserRequestUpdateDTO;
+import com.tucfinancymanager.backend.DTOs.user.UserResponseDTO;
 import com.tucfinancymanager.backend.entities.User;
 import com.tucfinancymanager.backend.exceptions.ConflictException;
+import com.tucfinancymanager.backend.exceptions.NotFoundException;
 import com.tucfinancymanager.backend.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +19,27 @@ public class UsersService {
     @Autowired
     private UsersRepository usersRepository;
 
-    public List<User> getAllUsers () {
-        return this.usersRepository.findAll();
+
+
+    public List<UserResponseDTO> getAllUsers() {
+        var users = this.usersRepository.findAll();
+
+        return users.stream()
+                .map(user -> new UserResponseDTO(
+                        user.getId(),
+                        user.getUserPhoto(),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getPhone(),
+                        user.getMonthlyIncome(),
+                        user.getCreatedAt(),
+                        user.getUpdatedAt()
+                ))
+                .toList(); // Java 16+ (ou use .collect(Collectors.toList()) se for Java 8)
     }
 
-    public User createUsers (UserRequestDTO userRequestDTO){
+
+    public UserResponseDTO createUsers (UserRequestDTO userRequestDTO){
 
         var userExists = this.usersRepository.findUserByEmail(userRequestDTO.getEmail());
         if(userExists.isPresent()){
@@ -37,15 +56,56 @@ public class UsersService {
 
         usersRepository.save(user);
 
-        return user;
+        return new UserResponseDTO(
+                user.getId(),
+                user.getUserPhoto(),
+                user.getName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getMonthlyIncome(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
 
     }
 
-    public void updateUsers (UUID id, UserRequestDTO userRequestDTO){
+    public UserResponseDTO updateUsers (UUID id, UserRequestUpdateDTO userRequestUpdateDTO){
+        var user = this.usersRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("O usuario não existe")
+        );
+        if (userRequestUpdateDTO.getUserPhoto() != null) user.setUserPhoto(userRequestUpdateDTO.getUserPhoto());
+        if (userRequestUpdateDTO.getName() != null) user.setName(userRequestUpdateDTO.getName());
+        if (userRequestUpdateDTO.getEmail() != null) user.setEmail(userRequestUpdateDTO.getEmail());
+        if (userRequestUpdateDTO.getPhone() != null) user.setPhone(userRequestUpdateDTO.getPhone());
+        if (userRequestUpdateDTO.getMonthlyIncome() != null) user.setMonthlyIncome(userRequestUpdateDTO.getMonthlyIncome());
+        usersRepository.save(user);
 
+        return new UserResponseDTO(
+                user.getId(),
+                user.getUserPhoto(),
+                user.getName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getMonthlyIncome(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
     }
 
-    public void deleteUsers (UUID id){
-
+    public UserResponseDTO deleteUsers (UUID id){
+        User user = this.usersRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("O Usuario não existe")
+        );
+        usersRepository.delete(user);
+        return new UserResponseDTO(
+                user.getId(),
+                user.getUserPhoto(),
+                user.getName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getMonthlyIncome(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
     }
 }

@@ -1,6 +1,8 @@
 package com.tucfinancymanager.backend.controllers;
 
 import com.tucfinancymanager.backend.DTOs.user.UserRequestDTO;
+import com.tucfinancymanager.backend.DTOs.user.UserRequestUpdateDTO;
+import com.tucfinancymanager.backend.DTOs.user.UserResponseDTO;
 import com.tucfinancymanager.backend.entities.User;
 import com.tucfinancymanager.backend.services.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,10 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
-
 @Tag(name = "Usuarios", description = "Informações do Usuario")
 public class UserController {
 
@@ -24,26 +26,31 @@ public class UserController {
 
     @GetMapping
     @Operation(summary = "Listagem de todos os usuarios", description = "Essa função é responsável por listar todos os usuarios")
-    public ResponseEntity<List<User>> getAllUsers () {
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers () {
         var result = this.usersService.getAllUsers();
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
     @PostMapping
     @Operation(summary = "Cadastro do Usuario", description = "Essa função é responsável por cadastrar o usuario")
-    public ResponseEntity<User> createUsers (@Valid @RequestBody UserRequestDTO userRequestDTO){
+    public ResponseEntity<UserResponseDTO> createUsers (@Valid @RequestBody UserRequestDTO userRequestDTO){
         var result = this.usersService.createUsers(userRequestDTO);
         return new ResponseEntity<>(result,HttpStatus.CREATED);
     }
 
-//    @PutMapping
-//    public void updateUsers (UUID id, UserRequestDTO userRequestDTO){
-//        return this.usersService.updateUsers(id, userRequestDTO);
-//    }
-//
-//    @DeleteMapping
-//    public void deleteUsers (UUID id){
-//        return this.usersService.deleteUsers(id);
-//    }
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<UserResponseDTO> updateUsers ( @PathVariable UUID id, @RequestBody UserRequestUpdateDTO userRequestUpdateDTO){
+        System.out.println(id);
+        var result = this.usersService.updateUsers(id, userRequestUpdateDTO);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> deleteUsers (@PathVariable UUID id){
+        var result = this.usersService.deleteUsers(id);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
 
 }
