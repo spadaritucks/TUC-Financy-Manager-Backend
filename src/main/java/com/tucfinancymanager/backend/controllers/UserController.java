@@ -66,7 +66,6 @@ public class UserController {
     })
     @Operation(summary = "Atualização do Usuario", description = "Essa função é responsável por atualizar o usuario")
     public ResponseEntity<UserResponseDTO> updateUsers ( @PathVariable UUID id, @RequestBody UserRequestUpdateDTO userRequestUpdateDTO){
-        System.out.println(id);
         var result = this.usersService.updateUsers(id, userRequestUpdateDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
