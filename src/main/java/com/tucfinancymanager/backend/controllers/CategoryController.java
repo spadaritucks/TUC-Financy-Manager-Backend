@@ -39,8 +39,8 @@ public class CategoryController {
                             ))
             })
     })
-    public ResponseEntity<List<CategoryResponseDTO>> getAllCategories() {
-        var result = this.categoryService.getAllCategory();
+    public ResponseEntity<List<CategoryResponseDTO>> getAllCategories(@RequestParam int page, @RequestParam int size) {
+        var result = this.categoryService.getAllCategory(page, size);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

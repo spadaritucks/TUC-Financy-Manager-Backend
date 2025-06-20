@@ -8,6 +8,7 @@ import com.tucfinancymanager.backend.exceptions.ConflictException;
 import com.tucfinancymanager.backend.exceptions.NotFoundException;
 import com.tucfinancymanager.backend.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +20,8 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<CategoryResponseDTO> getAllCategory() {
-        var categories = this.categoryRepository.findAll();
+    public List<CategoryResponseDTO> getAllCategory(int page, int size) {
+        var categories = this.categoryRepository.findAll(PageRequest.of(page, size));
         return categories.stream().map((category) -> new CategoryResponseDTO(
                 category.getId(),
                 category.getCategoryName(),
