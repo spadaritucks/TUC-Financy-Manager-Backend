@@ -27,7 +27,7 @@ public class Transaction {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "subcategory_id")
+    @JoinColumn(name = "subcategory_id", nullable = false)
     private SubCategory subCategory;
 
     @Column(nullable = false)

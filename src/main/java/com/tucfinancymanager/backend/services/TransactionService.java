@@ -9,7 +9,9 @@ import com.tucfinancymanager.backend.repositories.SubCategoryRepository;
 import com.tucfinancymanager.backend.repositories.TransactionRepository;
 import com.tucfinancymanager.backend.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,10 +28,9 @@ public class TransactionService {
     @Autowired
     private SubCategoryRepository subCategoryRepository;
 
-    public List<TransactionResponseDTO> getAllTransactions() {
-        var transactions = this.transactionRepository.findAll();
 
-        return transactions.stream().map(transaction -> new TransactionResponseDTO(
+    private TransactionResponseDTO newResponseService (Transaction transaction){
+        return new TransactionResponseDTO(
                 transaction.getId(),
                 transaction.getUser().getId(),
                 transaction.getSubCategory().getId(),
@@ -39,7 +40,18 @@ public class TransactionService {
                 transaction.getTransactionStatus(),
                 transaction.getCreatedAt(),
                 transaction.getUpdatedAt()
-        )).toList();
+        );
+    }
+
+    public List<TransactionResponseDTO> getAllTransactions(int page, int size) {
+        var transactions = this.transactionRepository.findAll(PageRequest.of(page, size));
+
+        return transactions.stream().map(this::newResponseService).toList();
+    }
+
+    public List<TransactionResponseDTO> getTransactionsByUserId (UUID userId, int page, int size) {
+        var transactions = this.transactionRepository.findTransactionByuserId(userId, PageRequest.of(page, size));
+        return transactions.stream().map(this::newResponseService).toList();
     }
 
     public TransactionResponseDTO createTransaction(TransactionRequestDTO transactionRequestDTO) {
@@ -64,17 +76,7 @@ public class TransactionService {
 
         transactionRepository.save(transaction);
 
-        return new TransactionResponseDTO(
-                transaction.getId(),
-                transaction.getUser().getId(),
-                transaction.getSubCategory().getId(),
-                transaction.getTransactionType(),
-                transaction.getTransactionValue(),
-                transaction.getDescription(),
-                transaction.getTransactionStatus(),
-                transaction.getCreatedAt(),
-                transaction.getUpdatedAt()
-        );
+        return newResponseService(transaction);
     }
 
     public TransactionResponseDTO updateTransactionStatus (UUID id, TransactionStatusDTO transactionStatusDTO){
@@ -84,17 +86,7 @@ public class TransactionService {
         transaction.setTransactionStatus(transactionStatusDTO.getTransactionStatus());
         transactionRepository.save(transaction);
 
-        return new TransactionResponseDTO(
-                transaction.getId(),
-                transaction.getUser().getId(),
-                transaction.getSubCategory().getId(),
-                transaction.getTransactionType(),
-                transaction.getTransactionValue(),
-                transaction.getDescription(),
-                transaction.getTransactionStatus(),
-                transaction.getCreatedAt(),
-                transaction.getUpdatedAt()
-        );
+        return newResponseService(transaction);
     }
 
     public TransactionResponseDTO deleteTransaction(UUID id) {
@@ -103,16 +95,6 @@ public class TransactionService {
 
         transactionRepository.delete(transaction);
 
-        return new TransactionResponseDTO(
-                transaction.getId(),
-                transaction.getUser().getId(),
-                transaction.getSubCategory().getId(),
-                transaction.getTransactionType(),
-                transaction.getTransactionValue(),
-                transaction.getDescription(),
-                transaction.getTransactionStatus(),
-                transaction.getCreatedAt(),
-                transaction.getUpdatedAt()
-        );
+        return newResponseService(transaction);
     }
 }

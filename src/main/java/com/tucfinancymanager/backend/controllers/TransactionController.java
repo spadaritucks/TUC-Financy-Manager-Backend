@@ -38,10 +38,26 @@ public class TransactionController {
                             ))
             })
     })
-    public ResponseEntity<List<TransactionResponseDTO>> getAllTransactions() {
-        var result = this.transactionService.getAllTransactions();
+    public ResponseEntity<List<TransactionResponseDTO>> getAllTransactions(@RequestParam int page , @RequestParam int size) {
+        var result = this.transactionService.getAllTransactions(page, size);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @GetMapping("/by-user")
+    @Operation(summary = "Listagem de todas as transações de um usuario", description = "Essa função é responsável por listar todos as transações feitas por um usuario")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lista de transações retornada com sucesso", content = {
+                    @Content(mediaType = "application/json",
+                            array = @ArraySchema(
+                                    schema = @Schema(implementation = TransactionResponseDTO.class)
+                            ))
+            })
+    })
+    public ResponseEntity<List<TransactionResponseDTO>> getTransactionsByUserId(@RequestParam UUID userId, @RequestParam int page , @RequestParam int size) {
+        var result = this.transactionService.getTransactionsByUserId(userId, page, size);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
 
     @PostMapping
