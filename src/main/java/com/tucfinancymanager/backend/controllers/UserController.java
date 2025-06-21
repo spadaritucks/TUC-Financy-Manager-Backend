@@ -38,8 +38,8 @@ public class UserController {
                             ))
             })
     })
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers () {
-        var result = this.usersService.getAllUsers();
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers (@RequestParam int page, @RequestParam int size) {
+        var result = this.usersService.getAllUsers(page, size);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 

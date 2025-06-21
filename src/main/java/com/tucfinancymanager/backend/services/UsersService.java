@@ -8,6 +8,7 @@ import com.tucfinancymanager.backend.exceptions.ConflictException;
 import com.tucfinancymanager.backend.exceptions.NotFoundException;
 import com.tucfinancymanager.backend.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class UsersService {
 
 
 
-    public List<UserResponseDTO> getAllUsers() {
-        var users = this.usersRepository.findAll();
+    public List<UserResponseDTO> getAllUsers(int page, int size) {
+        var users = this.usersRepository.findAll(PageRequest.of(page, size));
 
         return users.stream()
                 .map(user -> new UserResponseDTO(
