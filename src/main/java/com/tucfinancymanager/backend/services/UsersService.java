@@ -1,8 +1,10 @@
 package com.tucfinancymanager.backend.services;
 
+import com.tucfinancymanager.backend.DTOs.transaction.TransactionResponseDTO;
 import com.tucfinancymanager.backend.DTOs.user.UserRequestDTO;
 import com.tucfinancymanager.backend.DTOs.user.UserRequestUpdateDTO;
 import com.tucfinancymanager.backend.DTOs.user.UserResponseDTO;
+import com.tucfinancymanager.backend.entities.Transaction;
 import com.tucfinancymanager.backend.entities.User;
 import com.tucfinancymanager.backend.exceptions.ConflictException;
 import com.tucfinancymanager.backend.exceptions.NotFoundException;
@@ -20,22 +22,24 @@ public class UsersService {
     @Autowired
     private UsersRepository usersRepository;
 
-
+    private UserResponseDTO newResponseService (User user){
+        return new UserResponseDTO(
+                user.getId(),
+                user.getUserPhoto(),
+                user.getName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getMonthlyIncome(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
+    }
 
     public List<UserResponseDTO> getAllUsers(int page, int size) {
         var users = this.usersRepository.findAll(PageRequest.of(page, size));
 
         return users.stream()
-                .map(user -> new UserResponseDTO(
-                        user.getId(),
-                        user.getUserPhoto(),
-                        user.getName(),
-                        user.getEmail(),
-                        user.getPhone(),
-                        user.getMonthlyIncome(),
-                        user.getCreatedAt(),
-                        user.getUpdatedAt()
-                ))
+                .map(this::newResponseService)
                 .toList(); // Java 16+ (ou use .collect(Collectors.toList()) se for Java 8)
     }
 
@@ -57,16 +61,7 @@ public class UsersService {
 
         usersRepository.save(user);
 
-        return new UserResponseDTO(
-                user.getId(),
-                user.getUserPhoto(),
-                user.getName(),
-                user.getEmail(),
-                user.getPhone(),
-                user.getMonthlyIncome(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
-        );
+        return newResponseService(user);
 
     }
 
@@ -81,16 +76,7 @@ public class UsersService {
         if (userRequestUpdateDTO.getMonthlyIncome() != null) user.setMonthlyIncome(userRequestUpdateDTO.getMonthlyIncome());
         usersRepository.save(user);
 
-        return new UserResponseDTO(
-                user.getId(),
-                user.getUserPhoto(),
-                user.getName(),
-                user.getEmail(),
-                user.getPhone(),
-                user.getMonthlyIncome(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
-        );
+        return newResponseService(user);
     }
 
     public UserResponseDTO deleteUsers (UUID id){
@@ -98,15 +84,6 @@ public class UsersService {
                 () -> new NotFoundException("O Usuario não existe")
         );
         usersRepository.delete(user);
-        return new UserResponseDTO(
-                user.getId(),
-                user.getUserPhoto(),
-                user.getName(),
-                user.getEmail(),
-                user.getPhone(),
-                user.getMonthlyIncome(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
-        );
+        return newResponseService(user);
     }
 }

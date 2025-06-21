@@ -20,14 +20,18 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<CategoryResponseDTO> getAllCategory(int page, int size) {
-        var categories = this.categoryRepository.findAll(PageRequest.of(page, size));
-        return categories.stream().map((category) -> new CategoryResponseDTO(
+    private CategoryResponseDTO newResponseService (Category category){
+        return new CategoryResponseDTO(
                 category.getId(),
                 category.getCategoryName(),
                 category.getCreatedAt(),
                 category.getUpdatedAt()
-        )).toList();
+        );
+    }
+
+    public List<CategoryResponseDTO> getAllCategory(int page, int size) {
+        var categories = this.categoryRepository.findAll(PageRequest.of(page, size));
+        return categories.stream().map(this::newResponseService).toList();
     }
 
     public CategoryResponseDTO createCategory (CategoryRequestDTO categoryRequestDTO) {
@@ -40,12 +44,7 @@ public class CategoryService {
         category.setCategoryName(categoryRequestDTO.getCategoryName());
         categoryRepository.save(category);
 
-        return new CategoryResponseDTO(
-                category.getId(),
-                category.getCategoryName(),
-                category.getCreatedAt(),
-                category.getUpdatedAt()
-        );
+        return newResponseService(category);
 
     }
 
@@ -56,12 +55,7 @@ public class CategoryService {
             category.setCategoryName(categoryRequestUpdateDTO.getCategoryName());
         categoryRepository.save(category);
 
-        return new CategoryResponseDTO(
-                category.getId(),
-                category.getCategoryName(),
-                category.getCreatedAt(),
-                category.getUpdatedAt()
-        );
+        return newResponseService(category);
 
     }
 
@@ -70,12 +64,7 @@ public class CategoryService {
                 .orElseThrow(() -> new NotFoundException("A categoria não existe"));
         categoryRepository.delete(category);
 
-        return new CategoryResponseDTO(
-                category.getId(),
-                category.getCategoryName(),
-                category.getCreatedAt(),
-                category.getUpdatedAt()
-        );
+        return newResponseService(category);
 
     }
 

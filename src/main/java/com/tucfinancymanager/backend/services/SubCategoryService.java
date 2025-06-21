@@ -24,15 +24,19 @@ public class SubCategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<SubCategoryResponseDTO> getAllSubCategories(int page, int size) {
-        var subcategories = this.subCategoryRepository.findAll(PageRequest.of(page,size));
-        return subcategories.stream().map(subcategory -> new SubCategoryResponseDTO(
+    private SubCategoryResponseDTO newResponseService (SubCategory subcategory){
+        return new SubCategoryResponseDTO(
                 subcategory.getId(),
                 subcategory.getCategory().getId(),
                 subcategory.getSubcategoryName(),
                 subcategory.getCreatedAt(),
                 subcategory.getUpdatedAt()
-        )).toList();
+        );
+    }
+
+    public List<SubCategoryResponseDTO> getAllSubCategories(int page, int size) {
+        var subcategories = this.subCategoryRepository.findAll(PageRequest.of(page,size));
+        return subcategories.stream().map(this::newResponseService).toList();
 
     }
 
@@ -50,13 +54,7 @@ public class SubCategoryService {
 
         subCategoryRepository.save(subCategory);
 
-        return new SubCategoryResponseDTO(
-                subCategory.getId(),
-                subCategory.getCategory().getId(),
-                subCategory.getSubcategoryName(),
-                subCategory.getCreatedAt(),
-                subCategory.getUpdatedAt()
-        );
+        return newResponseService(subCategory);
 
 
     }
@@ -71,13 +69,7 @@ public class SubCategoryService {
 
         subCategoryRepository.save(subCategory);
 
-        return new SubCategoryResponseDTO(
-                subCategory.getId(),
-                subCategory.getCategory().getId(),
-                subCategory.getSubcategoryName(),
-                subCategory.getCreatedAt(),
-                subCategory.getUpdatedAt()
-        );
+        return newResponseService(subCategory);
     }
 
     public SubCategoryResponseDTO deleteSubCategory(UUID id) {
@@ -87,12 +79,6 @@ public class SubCategoryService {
 
         subCategoryRepository.delete(subCategory);
 
-        return new SubCategoryResponseDTO(
-                subCategory.getId(),
-                subCategory.getCategory().getId(),
-                subCategory.getSubcategoryName(),
-                subCategory.getCreatedAt(),
-                subCategory.getUpdatedAt()
-        );
+        return newResponseService(subCategory);
     }
 }
