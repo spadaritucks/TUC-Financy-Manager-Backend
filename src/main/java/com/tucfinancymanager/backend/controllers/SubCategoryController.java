@@ -39,8 +39,8 @@ public class SubCategoryController {
                             ))
             })
     })
-    public ResponseEntity<List<SubCategoryResponseDTO>> getAllSubCategories() {
-        var result = this.subCategoryService.getAllSubCategories();
+    public ResponseEntity<List<SubCategoryResponseDTO>> getAllSubCategories(@RequestParam int page, @RequestParam int size) {
+        var result = this.subCategoryService.getAllSubCategories(page, size);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
