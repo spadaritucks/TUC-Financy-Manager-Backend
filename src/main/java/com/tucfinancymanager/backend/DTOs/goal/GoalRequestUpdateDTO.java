@@ -1,0 +1,41 @@
+package com.tucfinancymanager.backend.DTOs.goal;
+
+import com.tucfinancymanager.backend.ENUMs.GoalStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
+import java.util.UUID;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class GoalRequestUpdateDTO {
+
+
+
+    @Size(min = 3, max = 100, message = "O nome da meta deve ter entre 3 e 100 caracteres")
+    @Schema(example = "Juntar 100 reais por mês", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nome da Meta")
+    private String goalName;
+
+
+    @Positive(message = "O valor da meta deve ser maior que zero")
+    @Schema(example = "2000.00", requiredMode = Schema.RequiredMode.REQUIRED, description = "Valor da meta")
+    private Double targetValue;
+
+
+    @Schema(example = "2025-01-01T00:00:00", requiredMode = Schema.RequiredMode.REQUIRED, description = "Data inicial da meta (formato: yyyy-MM-dd'T'HH:mm:ss)")
+    private Timestamp startDate;
+
+
+    @Schema(example = "2025-12-31T00:00:00", requiredMode = Schema.RequiredMode.REQUIRED, description = "Data final da meta (formato: yyyy-MM-dd'T'HH:mm:ss)")
+    private Timestamp endDate;
+
+
+    @Schema(example = "IN_PROGRESS", requiredMode = Schema.RequiredMode.REQUIRED, description = "Status da meta. Valores possíveis: IN_PROGRESS, COMPLETED, CANCELED")
+    private GoalStatus goalStatus;
+}
