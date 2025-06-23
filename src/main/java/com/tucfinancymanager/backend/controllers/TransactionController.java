@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +71,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "404", description = "O usuario não existe"),
             @ApiResponse(responseCode = "404", description = "A subcategoria não existe")
     })
-    public ResponseEntity<TransactionResponseDTO> createTransaction( @RequestBody TransactionRequestDTO transactionRequestDTO) {
+    public ResponseEntity<TransactionResponseDTO> createTransaction(@Valid @RequestBody TransactionRequestDTO transactionRequestDTO) {
         var result = this.transactionService.createTransaction(transactionRequestDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

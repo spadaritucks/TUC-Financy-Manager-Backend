@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +71,7 @@ public class GoalController {
             @ApiResponse(responseCode = "404", description = "O usuario não existe"),
             @ApiResponse(responseCode = "404", description = "A subcategoria não existe")
     })
-    public ResponseEntity<GoalResponseDTO> createGoal( @RequestBody GoalRequestDTO goalRequestDTO) {
+    public ResponseEntity<GoalResponseDTO> createGoal(@Valid @RequestBody GoalRequestDTO goalRequestDTO) {
         var result = this.goalService.createGoal(goalRequestDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

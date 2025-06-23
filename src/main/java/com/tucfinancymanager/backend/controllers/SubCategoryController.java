@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,7 @@ public class SubCategoryController {
             @ApiResponse(responseCode = "409", description = "A subcategoria já existe no sistema"),
             @ApiResponse(responseCode = "404", description = "A categoria já existe no sistema")
     })
-    public ResponseEntity<SubCategoryResponseDTO> createSubCategory(@RequestBody SubCategoryRequestDTO subCategoryRequestDTO) {
+    public ResponseEntity<SubCategoryResponseDTO> createSubCategory(@Valid @RequestBody SubCategoryRequestDTO subCategoryRequestDTO) {
         var result = this.subCategoryService.createSubCategory(subCategoryRequestDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
