@@ -29,23 +29,11 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationTypeEnum notificationType;
 
-    @ManyToOne
-    @JoinColumn(name = "transaction_id")
-    private Transaction transaction;
-
-    @ManyToOne
-    @JoinColumn(name = "future_transaction_id")
-    private FutureTransaction futureTransaction;
-
-    @ManyToOne
-    @JoinColumn(name = "goal_id")
-    private Goal goal;
+    @Column(nullable = false)
+    private String title;
 
     @Column(nullable = false)
     private String message;
-
-    @Column(nullable = false)
-    private Boolean notificationStatus;
 
     @CreationTimestamp
     private Timestamp createdAt;

@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity(name = "goals")
@@ -35,10 +36,10 @@ public class Goal {
     private Double targetValue;
 
     @Column(nullable = false)
-    private Timestamp startDate;
+    private LocalDateTime startDate;
 
     @Column(nullable = false)
-    private Timestamp endDate;
+    private LocalDateTime endDate;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

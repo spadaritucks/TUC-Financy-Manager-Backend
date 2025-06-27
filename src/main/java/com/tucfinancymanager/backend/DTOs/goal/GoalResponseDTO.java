@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -40,11 +41,11 @@ public class GoalResponseDTO {
 
 
     @Schema(example = "2025-01-01T00:00:00", requiredMode = Schema.RequiredMode.REQUIRED, description = "Data inicial da meta (formato: yyyy-MM-dd'T'HH:mm:ss)")
-    private Timestamp startDate;
+    private LocalDateTime startDate;
 
 
     @Schema(example = "2025-12-31T00:00:00", requiredMode = Schema.RequiredMode.REQUIRED, description = "Data final da meta (formato: yyyy-MM-dd'T'HH:mm:ss)")
-    private Timestamp endDate;
+    private LocalDateTime endDate;
 
 
     @Schema(example = "IN_PROGRESS", requiredMode = Schema.RequiredMode.REQUIRED, description = "Status da meta. Valores possíveis: IN_PROGRESS, COMPLETED, CANCELED")
