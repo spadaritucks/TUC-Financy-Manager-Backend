@@ -1,5 +1,6 @@
 package com.tucfinancymanager.backend.exceptions;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.tucfinancymanager.backend.DTOs.errors.ErrorResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -9,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
+import com.auth0.jwt.exceptions.JWTCreationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,16 @@ public class ExceptionFilter  {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> notFoundExceptionHandler(NotFoundException e){
         return errorResponseHandler(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(JWTCreationException.class)
+    public ResponseEntity<ErrorResponseDTO> jwtCreationExceptionHandler(JWTGeneratorException e){
+        return errorResponseHandler(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(JWTVerificationException.class)
+    public ResponseEntity<ErrorResponseDTO> authorizationExceptionHandler(JWTVerificationException e){
+        return errorResponseHandler(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AuthorizationException.class)
