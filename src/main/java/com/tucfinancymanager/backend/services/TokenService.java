@@ -34,7 +34,7 @@ public class TokenService {
         return token;
     }
 
-    public String validadeToken(String token) throws JWTValidatorException {
+    public String validateToken(String token) throws JWTValidatorException {
         Algorithm algorithm = Algorithm.HMAC256(secret);
         return JWT.require(algorithm)
                 .withIssuer("tfm-auth-login")

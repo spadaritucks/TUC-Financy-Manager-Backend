@@ -11,6 +11,7 @@ import com.tucfinancymanager.backend.exceptions.NotFoundException;
 import com.tucfinancymanager.backend.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,9 @@ public class UsersService {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private UserResponseDTO newResponseService (User user){
         return new UserResponseDTO(
@@ -46,10 +50,13 @@ public class UsersService {
 
     public UserResponseDTO createUsers (UserRequestDTO userRequestDTO){
 
-        var userExists = this.usersRepository.findUserByEmail(userRequestDTO.getEmail());
+        var userExists = this.usersRepository.findByEmail(userRequestDTO.getEmail());
         if(userExists.isPresent()){
             throw new ConflictException("O Usuario já existe no sistema");
         }
+
+        String passwordEncoded = passwordEncoder.encode(userRequestDTO.getPassword());
+
 
         User user = new User();
         user.setUserPhoto(userRequestDTO.getUserPhoto());
@@ -57,7 +64,7 @@ public class UsersService {
         user.setEmail(userRequestDTO.getEmail());
         user.setPhone(userRequestDTO.getPhone());
         user.setMonthlyIncome(userRequestDTO.getMonthlyIncome());
-        user.setPassword(userRequestDTO.getPassword());
+        user.setPassword(passwordEncoded);
 
         usersRepository.save(user);
 

@@ -1,6 +1,8 @@
 package com.tucfinancymanager.backend.services;
 
 import com.tucfinancymanager.backend.DTOs.auth.AuthRequestDTO;
+import com.tucfinancymanager.backend.DTOs.auth.AuthResponseDTO;
+import com.tucfinancymanager.backend.DTOs.user.UserResponseDTO;
 import com.tucfinancymanager.backend.exceptions.AuthorizationException;
 import com.tucfinancymanager.backend.exceptions.NotFoundException;
 import com.tucfinancymanager.backend.repositories.UsersRepository;
@@ -20,9 +22,9 @@ public class AuthService {
     @Autowired
     private TokenService tokenService;
 
-    public String auth (AuthRequestDTO authRequestDTO) {
+    public AuthResponseDTO auth (AuthRequestDTO authRequestDTO) {
 
-        var user = this.usersRepository.findUserByEmail(authRequestDTO.getEmail()).orElseThrow(
+        var user = this.usersRepository.findByEmail(authRequestDTO.getEmail()).orElseThrow(
                 () -> new NotFoundException("Usuario não existe")
         );
 
@@ -32,7 +34,21 @@ public class AuthService {
         }
 
         String token = this.tokenService.generateToken(user);
-        return token;
+        UserResponseDTO userResponseDTO = new UserResponseDTO(
+                user.getId(),
+                user.getUserPhoto(),
+                user.getName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getMonthlyIncome(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
+
+        return new AuthResponseDTO(
+                token,
+                userResponseDTO
+        );
 
     }
 }

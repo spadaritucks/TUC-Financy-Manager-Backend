@@ -37,10 +37,10 @@ public class SecurityFilter extends OncePerRequestFilter {
             return;
         }
 
-        var login = tokenService.validadeToken(token);
+        var login = tokenService.validateToken(token);
 
         if(login !=null) {
-            User user = usersRepository.findUserByEmail(login).orElseThrow(
+            User user = usersRepository.findByEmail(login).orElseThrow(
                     () -> new NotFoundException("Usuario não existe")
             );
 
