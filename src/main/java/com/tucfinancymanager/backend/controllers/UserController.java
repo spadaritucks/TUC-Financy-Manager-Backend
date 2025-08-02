@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,7 +44,7 @@ public class UserController {
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     @Operation(summary = "Cadastro do Usuario", description = "Essa função é responsável por cadastrar o usuario")
     @ApiResponses({
             @ApiResponse(responseCode = "201", content = {
@@ -52,9 +53,20 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Dados Invalidos"),
             @ApiResponse(responseCode = "409", description = "O Usuario já existe no sistema")
     })
-    public ResponseEntity<UserResponseDTO> createUsers (@Valid @RequestBody UserRequestDTO userRequestDTO){
+    public ResponseEntity<UserResponseDTO> createUsers(
+            @RequestParam(value = "userPhoto", required = false) MultipartFile userPhoto,
+            @RequestParam("name") String name,
+            @RequestParam("email") String email,
+            @RequestParam("phone") String phone,
+            @RequestParam("monthlyIncome") Double monthlyIncome,
+            @RequestParam("password") String password
+    ) {
+        UserRequestDTO userRequestDTO = new UserRequestDTO(
+                userPhoto, name, email, phone, monthlyIncome, password
+        );
+
         var result = this.usersService.createUsers(userRequestDTO);
-        return new ResponseEntity<>(result,HttpStatus.CREATED);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})

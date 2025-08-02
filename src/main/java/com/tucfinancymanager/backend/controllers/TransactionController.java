@@ -45,7 +45,7 @@ public class TransactionController {
     }
 
     @GetMapping("/by-user")
-    @Operation(summary = "Listagem de todas as transações de um usuario", description = "Essa função é responsável por listar todos as transações feitas por um usuario")
+    @Operation(summary = "Listagem de todas as transações entre um intervalo de tempo de um usuario", description = "Essa função é responsável por listar todos as transações feitas em um intervalo de tempo no mês por um usuario")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de transações retornada com sucesso", content = {
                     @Content(mediaType = "application/json",
@@ -54,8 +54,13 @@ public class TransactionController {
                             ))
             })
     })
-    public ResponseEntity<List<TransactionResponseDTO>> getTransactionsByUserId(@RequestParam UUID userId, @RequestParam int page , @RequestParam int size) {
-        var result = this.transactionService.getTransactionsByUserId(userId, page, size);
+    public ResponseEntity<List<TransactionResponseDTO>> getCurrentMonthTransactionsByUserId(
+            @RequestParam UUID userId,
+            @RequestParam int month,
+            @RequestParam int year,
+            @RequestParam int page ,
+            @RequestParam int size) {
+        var result = this.transactionService.getCurrentMonthTransactionsByUserId(userId, month,year, page, size);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

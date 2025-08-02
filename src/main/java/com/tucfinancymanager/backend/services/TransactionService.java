@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,7 +39,10 @@ public class TransactionService {
                 transaction.getTransactionType(),
                 transaction.getTransactionValue(),
                 transaction.getDescription(),
+                transaction.getTransactionDate(),
+                transaction.getRecurrent(),
                 transaction.getTransactionStatus(),
+                transaction.getRecurrenceFrequency(),
                 transaction.getCreatedAt(),
                 transaction.getUpdatedAt()
         );
@@ -49,8 +54,17 @@ public class TransactionService {
         return transactions.stream().map(this::newResponseService).toList();
     }
 
-    public List<TransactionResponseDTO> getTransactionsByUserId (UUID userId, int page, int size) {
-        var transactions = this.transactionRepository.findTransactionByuserId(userId, PageRequest.of(page, size));
+    public List<TransactionResponseDTO> getCurrentMonthTransactionsByUserId (UUID userId, int month ,int year , int page, int size) {
+
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        var transactions = this.transactionRepository.findCurrentMonthTransactionsByUserId(
+                userId,
+                startDate,
+                endDate,
+                PageRequest.of(page, size));
+
         return transactions.stream().map(this::newResponseService).toList();
     }
 
@@ -72,7 +86,10 @@ public class TransactionService {
         transaction.setTransactionType(transactionRequestDTO.getTransactionType());
         transaction.setTransactionValue(transactionRequestDTO.getTransactionValue());
         transaction.setDescription(transactionRequestDTO.getDescription());
+        transaction.setTransactionDate(transactionRequestDTO.getTransactionDate());
+        transaction.setRecurrent(transactionRequestDTO.getRecurrent());
         transaction.setTransactionStatus(transactionRequestDTO.getTransactionStatus());
+        transaction.setRecurrenceFrequency(transactionRequestDTO.getRecurrenceFrequency());
 
         transactionRepository.save(transaction);
 

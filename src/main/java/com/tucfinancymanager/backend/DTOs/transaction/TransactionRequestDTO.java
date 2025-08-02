@@ -1,5 +1,6 @@
 package com.tucfinancymanager.backend.DTOs.transaction;
 
+import com.tucfinancymanager.backend.ENUMs.TransactionRecurrenceFrequencyEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionStatusEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -60,6 +63,14 @@ public class TransactionRequestDTO {
     )
     private String description;
 
+    @NotNull(message = "O campo de recorrência é obrigatório")
+    @Schema(example = "true", requiredMode = Schema.RequiredMode.REQUIRED, description = "Indica se a transação é recorrente")
+    private Boolean recurrent;
+
+    @NotNull(message = "A data da transação é obrigatória")
+    @Schema(example = "2025-01-01T00:00:00", requiredMode = Schema.RequiredMode.REQUIRED, description = "Data da transação (formato: yyyy-MM-dd'T'HH:mm:ss)")
+    private LocalDate transactionDate;
+
     @NotNull(message = "O status da transação é obrigatório")
     @Schema(
             example = "PENDING",
@@ -67,4 +78,8 @@ public class TransactionRequestDTO {
             description = "Status da transação. Valores possíveis: PENDING, COMPLETED, CANCELED"
     )
     private TransactionStatusEnum transactionStatus;
+
+    @NotNull(message = "A frequência da recorrência é obrigatória")
+    @Schema(example = "MONTHLY", requiredMode = Schema.RequiredMode.REQUIRED, description = "Frequência da recorrência. Valores: DAILY, WEEKLY, MONTHLY, YEARLY")
+    private TransactionRecurrenceFrequencyEnum recurrenceFrequency;
 }

@@ -55,6 +55,7 @@ public class GoalController {
             })
     })
     public ResponseEntity<List<GoalResponseDTO>> getGoalsByUserId(@RequestParam UUID userId, @RequestParam int page , @RequestParam int size) {
+        System.out.println(userId);
         var result = this.goalService.getGoalsByUserId(userId, page, size);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

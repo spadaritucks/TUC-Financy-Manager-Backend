@@ -1,0 +1,1 @@
+DROP TABLE future_transactions;

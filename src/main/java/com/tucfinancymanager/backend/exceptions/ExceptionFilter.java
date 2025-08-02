@@ -62,6 +62,11 @@ public class ExceptionFilter  {
         return errorResponseHandler(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(FileUploadException.class)
+    public ResponseEntity<ErrorResponseDTO> fileUploadExceptionHandler(FileUploadException e){
+        return errorResponseHandler(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO>  genericExceptionHandler(Exception e){
         return errorResponseHandler("Erro Desconhecido", HttpStatus.INTERNAL_SERVER_ERROR);

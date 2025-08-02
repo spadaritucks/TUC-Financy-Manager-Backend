@@ -1,13 +1,17 @@
 package com.tucfinancymanager.backend.DTOs.transaction;
 
+import com.tucfinancymanager.backend.ENUMs.TransactionRecurrenceFrequencyEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionStatusEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -39,8 +43,17 @@ public class TransactionResponseDTO {
     private String description;
 
 
+    @Schema(example = "2025-01-01T00:00:00", description = "Data da transação (formato: yyyy-MM-dd'T'HH:mm:ss)")
+    private LocalDate transactionDate;
+
+    @Schema(example = "true", requiredMode = Schema.RequiredMode.REQUIRED, description = "Indica se a transação é recorrente")
+    private Boolean recurrent;
+
     @Schema(example = "PENDING", description = "Status da transação. Valores possíveis: PENDING, COMPLETED, CANCELED")
     private TransactionStatusEnum transactionStatus;
+
+    @Schema(example = "MONTHLY", requiredMode = Schema.RequiredMode.REQUIRED, description = "Frequência da recorrência. Valores: DAILY, WEEKLY, MONTHLY, YEARLY")
+    private TransactionRecurrenceFrequencyEnum recurrenceFrequency;
 
     @Schema(description = "Registro de quanto a criação foi feita", example = "2025-06-16T14:21:00.914+00:00")
     private Timestamp created_at;

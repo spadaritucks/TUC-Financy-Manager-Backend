@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +18,7 @@ public class UserRequestUpdateDTO {
             requiredMode = Schema.RequiredMode.NOT_REQUIRED,
             description = "Foto do Usuário (URL opcional)"
     )
-    private String userPhoto;
+    private MultipartFile userPhoto;
 
 
     @Length(min = 2, max = 100, message = "O nome deve ter entre 2 e 100 caracteres")
