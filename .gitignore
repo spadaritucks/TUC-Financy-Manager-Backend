@@ -17,8 +17,6 @@ Thumbs.db
 
 # Arquivos de segurança/sensíveis
 application-dev.properties
-application-prod.properties
 application.properties
 docker-compose.yaml
 application.yml
-ão são globais
