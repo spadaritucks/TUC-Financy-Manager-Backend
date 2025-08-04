@@ -8,7 +8,9 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class EnvConfig {
 
     public static void loadEnvironmentVariables() {
-        Dotenv dotenv = Dotenv.configure().load();
+        Dotenv dotenv = Dotenv.configure()
+        .ignoreIfMissing()
+        .load();
         String profile = dotenv.get("SPRING_PROFILES_ACTIVE");
 
         if("dev".equals(profile)){
