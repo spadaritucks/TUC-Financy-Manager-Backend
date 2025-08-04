@@ -20,3 +20,4 @@ application-dev.properties
 application.properties
 docker-compose.yaml
 application.yml
+.env
