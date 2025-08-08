@@ -1,11 +1,9 @@
 package com.tucfinancymanager.backend.services;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.tucfinancymanager.backend.DTOs.transaction.TransactionResponseDTO;
+
 import com.tucfinancymanager.backend.DTOs.user.UserRequestDTO;
 import com.tucfinancymanager.backend.DTOs.user.UserRequestUpdateDTO;
 import com.tucfinancymanager.backend.DTOs.user.UserResponseDTO;
-import com.tucfinancymanager.backend.entities.Transaction;
 import com.tucfinancymanager.backend.entities.User;
 import com.tucfinancymanager.backend.exceptions.ConflictException;
 import com.tucfinancymanager.backend.exceptions.NotFoundException;

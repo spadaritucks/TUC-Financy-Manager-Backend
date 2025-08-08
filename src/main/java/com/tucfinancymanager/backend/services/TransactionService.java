@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,7 +69,7 @@ public class TransactionService {
 
         var result = transactions.getContent().stream().map(this::newResponseService).toList();
 
-        PageResponseDTO<TransactionResponseDTO> pageResponseDTO = new PageResponseDTO<TransactionResponseDTO>(
+        PageResponseDTO<TransactionResponseDTO> pageResponseDTO = new PageResponseDTO<>(
                 transactions.getNumber(),
                 transactions.getSize(),
                 transactions.getTotalElements(),

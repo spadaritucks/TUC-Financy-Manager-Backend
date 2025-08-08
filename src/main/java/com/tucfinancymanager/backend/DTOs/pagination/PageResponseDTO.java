@@ -2,8 +2,6 @@ package com.tucfinancymanager.backend.DTOs.pagination;
 
 import java.util.List;
 
-import com.tucfinancymanager.backend.DTOs.transaction.TransactionResponseDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

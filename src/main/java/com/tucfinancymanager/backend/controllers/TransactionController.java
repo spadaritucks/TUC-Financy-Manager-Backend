@@ -5,7 +5,6 @@ import com.tucfinancymanager.backend.DTOs.pagination.PageResponseDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionRequestDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionResponseDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionStatusDTO;
-import com.tucfinancymanager.backend.entities.Transaction;
 import com.tucfinancymanager.backend.services.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -20,7 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -64,7 +63,7 @@ public class TransactionController {
             @RequestParam int page ,
             @RequestParam int size) {
         var result = this.transactionService.getCurrentMonthTransactionsByUserId(userId, month,year, page, size);
-    
+      
 
         return new ResponseEntity<>(result, HttpStatus.OK);
       
