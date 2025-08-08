@@ -1,10 +1,10 @@
 package com.tucfinancymanager.backend.controllers;
 
-import com.tucfinancymanager.backend.DTOs.category.CategoryResponseDTO;
+
+import com.tucfinancymanager.backend.DTOs.pagination.PageResponseDTO;
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryRequestDTO;
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryRequestUpdateDTO;
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryResponseDTO;
-import com.tucfinancymanager.backend.DTOs.user.UserResponseDTO;
 import com.tucfinancymanager.backend.services.SubCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -40,7 +40,7 @@ public class SubCategoryController {
                             ))
             })
     })
-    public ResponseEntity<List<SubCategoryResponseDTO>> getAllSubCategories(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<PageResponseDTO<SubCategoryResponseDTO>> getAllSubCategories(@RequestParam int page, @RequestParam int size) {
         var result = this.subCategoryService.getAllSubCategories(page, size);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

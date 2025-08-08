@@ -1,5 +1,6 @@
 package com.tucfinancymanager.backend.services;
 
+import com.tucfinancymanager.backend.DTOs.pagination.PageResponseDTO;
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryRequestDTO;
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryRequestUpdateDTO;
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryResponseDTO;
@@ -9,6 +10,7 @@ import com.tucfinancymanager.backend.exceptions.NotFoundException;
 import com.tucfinancymanager.backend.repositories.CategoryRepository;
 import com.tucfinancymanager.backend.repositories.SubCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -34,9 +36,21 @@ public class SubCategoryService {
         );
     }
 
-    public List<SubCategoryResponseDTO> getAllSubCategories(int page, int size) {
-        var subcategories = this.subCategoryRepository.findAll(PageRequest.of(page,size));
-        return subcategories.stream().map(this::newResponseService).toList();
+    public PageResponseDTO<SubCategoryResponseDTO> getAllSubCategories(int page, int size) {
+        Page<SubCategory> subcategories = this.subCategoryRepository.findAll(PageRequest.of(page,size));
+        
+        var result = subcategories.getContent().stream().map(this::newResponseService).toList();
+
+        PageResponseDTO<SubCategoryResponseDTO> pageResponseDTO = new PageResponseDTO<>(
+            subcategories.getNumber(),
+            subcategories.getSize(),
+            subcategories.getTotalElements(),
+            subcategories.getTotalPages(),
+            subcategories.isLast(),
+            result
+        );
+
+        return pageResponseDTO;
 
     }
 
