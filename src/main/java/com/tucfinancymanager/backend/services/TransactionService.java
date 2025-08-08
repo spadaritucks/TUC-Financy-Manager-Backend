@@ -56,6 +56,14 @@ public class TransactionService {
         return transactions.stream().map(this::newResponseService).toList();
     }
 
+    public Double getMonthCurrentTransactionsAmount (UUID userId, int month ,int year) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+        var amount = this.transactionRepository.findMonthCurrentTransactionsAmountByUserId(userId, startDate,endDate);
+
+        return amount;
+    }
+
     public PageResponseDTO<TransactionResponseDTO> getCurrentMonthTransactionsByUserId (UUID userId, int month ,int year , int page, int size) {
 
         LocalDate startDate = LocalDate.of(year, month, 1);

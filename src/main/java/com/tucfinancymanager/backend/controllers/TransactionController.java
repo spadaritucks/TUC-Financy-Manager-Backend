@@ -46,6 +46,17 @@ public class TransactionController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/month-amount")
+    @Operation(summary = "Retorno do total de transações do mês", description = "Essa função é responsável por retornar o valor todal de transações do mês")
+    public ResponseEntity<Double> getMonthCurrentTransactionsAmount (
+        @RequestParam UUID userId,
+        @RequestParam int month,
+        @RequestParam int year
+    ) {
+        var result = this.transactionService.getMonthCurrentTransactionsAmount(userId, month, year);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @GetMapping("/by-user")
     @Operation(summary = "Listagem de todas as transações entre um intervalo de tempo de um usuario", description = "Essa função é responsável por listar todos as transações feitas em um intervalo de tempo no mês por um usuario")
     @ApiResponses({

@@ -24,6 +24,13 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
                         @Param("endDate") LocalDate endDate,
                         Pageable pageable);
 
-
+        @Query(value = "SELECT SUM(transaction_value) FROM transactions " +
+                        "WHERE user_id = :userId " +
+                        "AND transaction_date >= :startDate " +
+                        "AND transaction_date <= :endDate ", nativeQuery = true)
+        Double findMonthCurrentTransactionsAmountByUserId(
+                        @Param("userId") UUID userId,
+                        @Param("startDate") LocalDate startDate,
+                        @Param("endDate") LocalDate endDate);
 
 }
