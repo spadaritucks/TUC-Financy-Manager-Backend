@@ -1,5 +1,6 @@
 package com.tucfinancymanager.backend.DTOs.transaction;
 
+import com.tucfinancymanager.backend.DTOs.pagination.PageResponseDTO;
 import com.tucfinancymanager.backend.ENUMs.TransactionRecurrenceFrequencyEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionStatusEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
@@ -11,7 +12,6 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data

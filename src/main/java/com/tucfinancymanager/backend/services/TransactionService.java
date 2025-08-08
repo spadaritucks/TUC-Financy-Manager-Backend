@@ -1,5 +1,6 @@
 package com.tucfinancymanager.backend.services;
 
+import com.tucfinancymanager.backend.DTOs.pagination.PageResponseDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionRequestDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionResponseDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionStatusDTO;
@@ -9,12 +10,12 @@ import com.tucfinancymanager.backend.repositories.SubCategoryRepository;
 import com.tucfinancymanager.backend.repositories.TransactionRepository;
 import com.tucfinancymanager.backend.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +33,7 @@ public class TransactionService {
 
 
     private TransactionResponseDTO newResponseService (Transaction transaction){
+
         return new TransactionResponseDTO(
                 transaction.getId(),
                 transaction.getUser().getId(),
@@ -46,6 +48,7 @@ public class TransactionService {
                 transaction.getCreatedAt(),
                 transaction.getUpdatedAt()
         );
+
     }
 
     public List<TransactionResponseDTO> getAllTransactions(int page, int size) {
@@ -54,18 +57,30 @@ public class TransactionService {
         return transactions.stream().map(this::newResponseService).toList();
     }
 
-    public List<TransactionResponseDTO> getCurrentMonthTransactionsByUserId (UUID userId, int month ,int year , int page, int size) {
+    public PageResponseDTO<TransactionResponseDTO> getCurrentMonthTransactionsByUserId (UUID userId, int month ,int year , int page, int size) {
 
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
-        var transactions = this.transactionRepository.findCurrentMonthTransactionsByUserId(
+        Page<Transaction> transactions = this.transactionRepository.findCurrentMonthTransactionsByUserId(
                 userId,
                 startDate,
                 endDate,
                 PageRequest.of(page, size));
 
-        return transactions.stream().map(this::newResponseService).toList();
+        var result = transactions.getContent().stream().map(this::newResponseService).toList();
+
+        PageResponseDTO<TransactionResponseDTO> pageResponseDTO = new PageResponseDTO<TransactionResponseDTO>(
+                transactions.getNumber(),
+                transactions.getSize(),
+                transactions.getTotalElements(),
+                transactions.getTotalPages(),
+                transactions.isLast(),
+                result
+        );
+       
+
+        return pageResponseDTO;
     }
 
     public TransactionResponseDTO createTransaction(TransactionRequestDTO transactionRequestDTO) {
