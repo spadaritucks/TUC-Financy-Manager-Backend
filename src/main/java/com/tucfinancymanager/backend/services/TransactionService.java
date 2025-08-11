@@ -23,116 +23,125 @@ import java.util.UUID;
 @Service
 public class TransactionService {
 
-    @Autowired
-    private TransactionRepository transactionRepository;
+        @Autowired
+        private TransactionRepository transactionRepository;
 
-    @Autowired
-    private UsersRepository usersRepository;
+        @Autowired
+        private UsersRepository usersRepository;
 
-    @Autowired
-    private SubCategoryRepository subCategoryRepository;
+        @Autowired
+        private SubCategoryRepository subCategoryRepository;
 
+        private TransactionResponseDTO newResponseService(Transaction transaction) {
 
-    private TransactionResponseDTO newResponseService(Transaction transaction) {
+                CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO(
+                                transaction.getSubCategory().getCategory().getId(),
+                                transaction.getSubCategory().getCategory().getCategoryName(),
+                                transaction.getSubCategory().getCategory().getCreatedAt(),
+                                transaction.getSubCategory().getCategory().getUpdatedAt());
 
-        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO(
-                transaction.getSubCategory().getCategory().getId(),
-                transaction.getSubCategory().getCategory().getCategoryName(),
-                transaction.getSubCategory().getCategory().getCreatedAt(),
-                transaction.getSubCategory().getCategory().getUpdatedAt());
+                SubCategoryResponseDTO subCategoryResponseDTO = new SubCategoryResponseDTO(
+                                transaction.getSubCategory().getId(),
+                                transaction.getSubCategory().getCategory().getId(),
+                                transaction.getSubCategory().getSubcategoryName(),
+                                transaction.getSubCategory().getCreatedAt(),
+                                transaction.getSubCategory().getUpdatedAt(),
+                                categoryResponseDTO);
 
-        SubCategoryResponseDTO subCategoryResponseDTO = new SubCategoryResponseDTO(
-                transaction.getSubCategory().getId(),
-                transaction.getSubCategory().getCategory().getId(),
-                transaction.getSubCategory().getSubcategoryName(),
-                transaction.getSubCategory().getCreatedAt(),
-                transaction.getSubCategory().getUpdatedAt(),
-                categoryResponseDTO);
+                return new TransactionResponseDTO(
+                                transaction.getId(),
+                                transaction.getUser().getId(),
+                                transaction.getSubCategory().getId(),
+                                transaction.getTransactionType(),
+                                transaction.getTransactionValue(),
+                                transaction.getDescription(),
+                                transaction.getTransactionDate(),
+                                transaction.getRecurrent(),
+                                transaction.getRecurrenceFrequency(),
+                                transaction.getCreatedAt(),
+                                transaction.getUpdatedAt(),
+                                subCategoryResponseDTO
 
-        return new TransactionResponseDTO(
-                transaction.getId(),
-                transaction.getUser().getId(),
-                transaction.getSubCategory().getId(),
-                transaction.getTransactionType(),
-                transaction.getTransactionValue(),
-                transaction.getDescription(),
-                transaction.getTransactionDate(),
-                transaction.getRecurrent(),
-                transaction.getRecurrenceFrequency(),
-                transaction.getCreatedAt(),
-                transaction.getUpdatedAt(),
-                subCategoryResponseDTO
+                );
 
-        );
+        }
 
-    }
+        public PageResponseDTO<TransactionResponseDTO> getCurrentMonthTransactionsByUserId(
+                        UUID userId,
+                        int month,
+                        int year,
+                        Double minValue,
+                        Double maxValue,
+                        String subcategory,
+                        int page,
+                        int size) {
 
+                LocalDate startDate = LocalDate.of(year, month, 1);
+                LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
-    public PageResponseDTO<TransactionResponseDTO> getCurrentMonthTransactionsByUserId(UUID userId, int month, int year,
-            int page, int size) {
+                Page<Transaction> transactions = this.transactionRepository.findCurrentMonthTransactionsByUserId(
+                                userId,
+                                startDate,
+                                endDate,
+                                minValue,
+                                maxValue,
+                                subcategory,
+                                PageRequest.of(page, size));
 
-        LocalDate startDate = LocalDate.of(year, month, 1);
-        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+                var result = transactions.getContent().stream().map(this::newResponseService).toList();
 
-        Page<Transaction> transactions = this.transactionRepository.findCurrentMonthTransactionsByUserId(
-                userId,
-                startDate,
-                endDate,
-                PageRequest.of(page, size));
+                PageResponseDTO<TransactionResponseDTO> pageResponseDTO = new PageResponseDTO<>(
+                                transactions.getNumber(),
+                                transactions.getSize(),
+                                transactions.getTotalElements(),
+                                transactions.getTotalPages(),
+                                transactions.isLast(),
+                                result);
 
-        var result = transactions.getContent().stream().map(this::newResponseService).toList();
+                return pageResponseDTO;
+        }
 
-        PageResponseDTO<TransactionResponseDTO> pageResponseDTO = new PageResponseDTO<>(
-                transactions.getNumber(),
-                transactions.getSize(),
-                transactions.getTotalElements(),
-                transactions.getTotalPages(),
-                transactions.isLast(),
-                result);
+        public Double getMonthCurrentTransactionAmountByUserId(UUID userId, int month, int year,
+                        String transactionType) {
+                LocalDate startDate = LocalDate.of(year, month, 1);
+                LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+                var result = this.transactionRepository.findMonthCurrentTransactionAmountByUserId(userId, startDate,
+                                endDate, transactionType);
+                return result;
+        }
 
-        return pageResponseDTO;
-    }
+        public TransactionResponseDTO createTransaction(TransactionRequestDTO transactionRequestDTO) {
+                var user = this.usersRepository.findById(transactionRequestDTO.getUserId())
+                                .orElseThrow(
+                                                () -> new NotFoundException("O usuario não existe"));
 
-    public Double getMonthCurrentTransactionAmountByUserId (UUID userId, int month, int year, String transactionType) {
-        LocalDate startDate = LocalDate.of(year, month, 1);
-        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
-        var result = this.transactionRepository.findMonthCurrentTransactionAmountByUserId(userId, startDate, endDate, transactionType);
-        return result;
-    }
+                var subcategory = this.subCategoryRepository.findById(transactionRequestDTO.getSubCategoryId())
+                                .orElseThrow(
+                                                () -> new NotFoundException("A subcategoria não existe"));
 
-    public TransactionResponseDTO createTransaction(TransactionRequestDTO transactionRequestDTO) {
-        var user = this.usersRepository.findById(transactionRequestDTO.getUserId())
-                .orElseThrow(
-                        () -> new NotFoundException("O usuario não existe"));
+                Transaction transaction = new Transaction();
 
-        var subcategory = this.subCategoryRepository.findById(transactionRequestDTO.getSubCategoryId())
-                .orElseThrow(
-                        () -> new NotFoundException("A subcategoria não existe"));
+                transaction.setUser(user);
+                transaction.setSubCategory(subcategory);
+                transaction.setTransactionType(transactionRequestDTO.getTransactionType());
+                transaction.setTransactionValue(transactionRequestDTO.getTransactionValue());
+                transaction.setDescription(transactionRequestDTO.getDescription());
+                transaction.setTransactionDate(transactionRequestDTO.getTransactionDate());
+                transaction.setRecurrent(transactionRequestDTO.getRecurrent());
+                if (transactionRequestDTO.getRecurrenceFrequency() != null)
+                        transaction.setRecurrenceFrequency(transactionRequestDTO.getRecurrenceFrequency());
 
-        Transaction transaction = new Transaction();
+                transactionRepository.save(transaction);
 
-        transaction.setUser(user);
-        transaction.setSubCategory(subcategory);
-        transaction.setTransactionType(transactionRequestDTO.getTransactionType());
-        transaction.setTransactionValue(transactionRequestDTO.getTransactionValue());
-        transaction.setDescription(transactionRequestDTO.getDescription());
-        transaction.setTransactionDate(transactionRequestDTO.getTransactionDate());
-        transaction.setRecurrent(transactionRequestDTO.getRecurrent());
-        if(transactionRequestDTO.getRecurrenceFrequency() != null) transaction.setRecurrenceFrequency(transactionRequestDTO.getRecurrenceFrequency());
+                return newResponseService(transaction);
+        }
 
+        public TransactionResponseDTO deleteTransaction(UUID id) {
+                var transaction = this.transactionRepository.findById(id)
+                                .orElseThrow(() -> new NotFoundException("A Transação não existe"));
 
-        transactionRepository.save(transaction);
+                transactionRepository.delete(transaction);
 
-        return newResponseService(transaction);
-    }
-
-
-    public TransactionResponseDTO deleteTransaction(UUID id) {
-        var transaction = this.transactionRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("A Transação não existe"));
-
-        transactionRepository.delete(transaction);
-
-        return newResponseService(transaction);
-    }
+                return newResponseService(transaction);
+        }
 }

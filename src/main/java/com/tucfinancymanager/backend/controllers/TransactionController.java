@@ -39,9 +39,12 @@ public class TransactionController {
                         @RequestParam UUID userId,
                         @RequestParam int month,
                         @RequestParam int year,
+                        @RequestParam(required = false) Double minValue,
+                        @RequestParam(required = false) Double maxValue,
+                        @RequestParam(required = false) String subcategory,
                         @RequestParam int page,
                         @RequestParam int size) {
-                var result = this.transactionService.getCurrentMonthTransactionsByUserId(userId, month, year, page,
+                var result = this.transactionService.getCurrentMonthTransactionsByUserId(userId, month, year,minValue,maxValue,subcategory, page,
                                 size);
 
                 return new ResponseEntity<>(result, HttpStatus.OK);
