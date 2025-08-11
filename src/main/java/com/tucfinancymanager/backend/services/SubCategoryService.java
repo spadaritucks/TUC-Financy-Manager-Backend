@@ -1,5 +1,6 @@
 package com.tucfinancymanager.backend.services;
 
+import com.tucfinancymanager.backend.DTOs.category.CategoryResponseDTO;
 import com.tucfinancymanager.backend.DTOs.pagination.PageResponseDTO;
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryRequestDTO;
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryRequestUpdateDTO;
@@ -26,41 +27,49 @@ public class SubCategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    private SubCategoryResponseDTO newResponseService (SubCategory subcategory){
+    private SubCategoryResponseDTO newResponseService(SubCategory subcategory) {
+
+        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO(
+                subcategory.getCategory().getId(),
+                subcategory.getCategory().getCategoryName(),
+                subcategory.getCategory().getCreatedAt(),
+                subcategory.getCategory().getUpdatedAt());
+
         return new SubCategoryResponseDTO(
                 subcategory.getId(),
                 subcategory.getCategory().getId(),
                 subcategory.getSubcategoryName(),
                 subcategory.getCreatedAt(),
-                subcategory.getUpdatedAt()
-        );
+                subcategory.getUpdatedAt(),
+                categoryResponseDTO
+                );
     }
 
     public PageResponseDTO<SubCategoryResponseDTO> getAllSubCategories(int page, int size) {
-        Page<SubCategory> subcategories = this.subCategoryRepository.findAll(PageRequest.of(page,size));
-        
+        Page<SubCategory> subcategories = this.subCategoryRepository.findAll(PageRequest.of(page, size));
+
         var result = subcategories.getContent().stream().map(this::newResponseService).toList();
 
         PageResponseDTO<SubCategoryResponseDTO> pageResponseDTO = new PageResponseDTO<>(
-            subcategories.getNumber(),
-            subcategories.getSize(),
-            subcategories.getTotalElements(),
-            subcategories.getTotalPages(),
-            subcategories.isLast(),
-            result
-        );
+                subcategories.getNumber(),
+                subcategories.getSize(),
+                subcategories.getTotalElements(),
+                subcategories.getTotalPages(),
+                subcategories.isLast(),
+                result);
 
         return pageResponseDTO;
 
     }
 
     public SubCategoryResponseDTO createSubCategory(SubCategoryRequestDTO subCategoryRequestDTO) {
-        var subCategoryExists = this.subCategoryRepository.getBySubcategoryName(subCategoryRequestDTO.getSubcategoryName());
-        if(subCategoryExists.isPresent()){
+        var subCategoryExists = this.subCategoryRepository
+                .getBySubcategoryName(subCategoryRequestDTO.getSubcategoryName());
+        if (subCategoryExists.isPresent()) {
             throw new ConflictException("A subcategoria já existe no sistema");
         }
         var category = this.categoryRepository.findById(subCategoryRequestDTO.getCategoryId())
-                .orElseThrow(() -> new NotFoundException ("Categoria não encontrada"));
+                .orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
 
         SubCategory subCategory = new SubCategory();
         subCategory.setCategory(category);
@@ -70,15 +79,13 @@ public class SubCategoryService {
 
         return newResponseService(subCategory);
 
-
     }
 
     public SubCategoryResponseDTO updateSubCategory(UUID id, SubCategoryRequestUpdateDTO subCategoryRequestUpdateDTO) {
         var subCategory = this.subCategoryRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("A subcategoria não existe")
-        );
+                () -> new NotFoundException("A subcategoria não existe"));
 
-        if(subCategoryRequestUpdateDTO.getSubcategoryName() != null)
+        if (subCategoryRequestUpdateDTO.getSubcategoryName() != null)
             subCategory.setSubcategoryName(subCategoryRequestUpdateDTO.getSubcategoryName());
 
         subCategoryRepository.save(subCategory);
@@ -88,8 +95,7 @@ public class SubCategoryService {
 
     public SubCategoryResponseDTO deleteSubCategory(UUID id) {
         var subCategory = this.subCategoryRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("A subcategoria não existe")
-        );
+                () -> new NotFoundException("A subcategoria não existe"));
 
         subCategoryRepository.delete(subCategory);
 

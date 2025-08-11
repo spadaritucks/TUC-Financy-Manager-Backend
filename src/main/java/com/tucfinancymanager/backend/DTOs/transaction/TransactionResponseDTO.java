@@ -1,11 +1,12 @@
 package com.tucfinancymanager.backend.DTOs.transaction;
 
-import com.tucfinancymanager.backend.DTOs.pagination.PageResponseDTO;
+import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryResponseDTO;
+import com.tucfinancymanager.backend.DTOs.user.UserResponseDTO;
 import com.tucfinancymanager.backend.ENUMs.TransactionRecurrenceFrequencyEnum;
-import com.tucfinancymanager.backend.ENUMs.TransactionStatusEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
+import com.tucfinancymanager.backend.entities.SubCategory;
+
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,8 +50,6 @@ public class TransactionResponseDTO {
     @Schema(example = "true", requiredMode = Schema.RequiredMode.REQUIRED, description = "Indica se a transação é recorrente")
     private Boolean recurrent;
 
-    @Schema(example = "PENDING", description = "Status da transação. Valores possíveis: PENDING, COMPLETED, CANCELED")
-    private TransactionStatusEnum transactionStatus;
 
     @Schema(example = "MONTHLY", requiredMode = Schema.RequiredMode.REQUIRED, description = "Frequência da recorrência. Valores: DAILY, WEEKLY, MONTHLY, YEARLY")
     private TransactionRecurrenceFrequencyEnum recurrenceFrequency;
@@ -60,4 +59,7 @@ public class TransactionResponseDTO {
 
     @Schema(description = "Registro de quanto a atualização foi feita", example = "2025-06-16T14:21:00.914+00:00")
     private Timestamp updated_at;
+
+    @Schema(description = "Dados da subcategoria vinculada na transação")
+    private SubCategoryResponseDTO subcategory;
 }

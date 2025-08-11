@@ -1,14 +1,14 @@
 package com.tucfinancymanager.backend.DTOs.subcategory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.UUID;
+
+import com.tucfinancymanager.backend.DTOs.category.CategoryResponseDTO;
 
 @Data
 @AllArgsConstructor
@@ -29,4 +29,7 @@ public class SubCategoryResponseDTO {
 
     @Schema(description = "Registro de quanto a atualização foi feita", example = "2025-06-16T14:21:00.914+00:00")
     private Timestamp updated_at;
+
+    @Schema(description = "Exibe a categoria vinculada")
+    private CategoryResponseDTO category;
 }

@@ -13,24 +13,32 @@ import java.util.UUID;
 
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
 
-        @Query(value = "SELECT * FROM transactions " +
-                        "WHERE user_id = :userId " +
-                        "AND transaction_date >= :startDate " +
-                        "AND transaction_date <= :endDate "
-                        + "ORDER BY transaction_date DESC ", nativeQuery = true)
-        Page<Transaction> findCurrentMonthTransactionsByUserId(
-                        @Param("userId") UUID userId,
-                        @Param("startDate") LocalDate startDate,
-                        @Param("endDate") LocalDate endDate,
-                        Pageable pageable);
+  @Query("""
+          SELECT t
+          FROM transactions t
+          JOIN FETCH t.subCategory s
+          JOIN FETCH s.category c
+          WHERE t.user.id = :userId
+            AND t.transactionDate >= :startDate
+            AND t.transactionDate <= :endDate
+          ORDER BY t.transactionDate DESC
+      """)
+  Page<Transaction> findCurrentMonthTransactionsByUserId(
+      @Param("userId") UUID userId,
+      @Param("startDate") LocalDate startDate,
+      @Param("endDate") LocalDate endDate,
+      Pageable pageable);
 
-        @Query(value = "SELECT SUM(transaction_value) FROM transactions " +
-                        "WHERE user_id = :userId " +
-                        "AND transaction_date >= :startDate " +
-                        "AND transaction_date <= :endDate ", nativeQuery = true)
-        Double findMonthCurrentTransactionsAmountByUserId(
-                        @Param("userId") UUID userId,
-                        @Param("startDate") LocalDate startDate,
-                        @Param("endDate") LocalDate endDate);
+      
+  @Query(value = "SELECT SUM(transaction_value) FROM transactions " +
+      "WHERE user_id = :userId " +
+      "AND transaction_type = :transactionType " +
+      "AND transaction_date >= :startDate " +
+      "AND transaction_date <= :endDate ", nativeQuery = true)
+  Double findMonthCurrentTransactionAmountByUserId(
+      @Param("userId") UUID userId,
+      @Param("startDate") LocalDate startDate,
+      @Param("endDate") LocalDate endDate,
+      @Param("transactionType") String transactionType);
 
 }

@@ -1,7 +1,6 @@
 package com.tucfinancymanager.backend.entities;
 
 import com.tucfinancymanager.backend.ENUMs.TransactionRecurrenceFrequencyEnum;
-import com.tucfinancymanager.backend.ENUMs.TransactionStatusEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity(name = "transactions")
@@ -48,11 +46,7 @@ public class Transaction {
     @Column(nullable = false)
     private Boolean recurrent;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private TransactionStatusEnum transactionStatus;
-
-    @Column(nullable = false)
+  
     @Enumerated(EnumType.STRING)
     private TransactionRecurrenceFrequencyEnum recurrenceFrequency;
 
