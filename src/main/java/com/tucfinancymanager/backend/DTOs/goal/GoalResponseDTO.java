@@ -1,11 +1,8 @@
 package com.tucfinancymanager.backend.DTOs.goal;
 
+import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryResponseDTO;
 import com.tucfinancymanager.backend.ENUMs.GoalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -56,4 +53,7 @@ public class GoalResponseDTO {
 
     @Schema(description = "Registro de quanto a atualização foi feita", example = "2025-06-16T14:21:00.914+00:00")
     private Timestamp updated_at;
+
+    @Schema(description = "Dados da subcategoria vinculada na transação")
+    private SubCategoryResponseDTO subcategory;
 }
