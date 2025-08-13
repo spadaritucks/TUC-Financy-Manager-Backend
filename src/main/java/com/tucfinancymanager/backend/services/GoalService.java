@@ -52,6 +52,7 @@ public class GoalService {
                 goal.getUser().getId(),
                 goal.getSubCategory().getId(),
                 goal.getGoalName(),
+                goal.getGoalType(),
                 goal.getTargetValue(),
                 goal.getStartDate(),
                 goal.getEndDate(),
@@ -111,6 +112,7 @@ public class GoalService {
         goal.setUser(user);
         goal.setSubCategory(subcategory);
         goal.setGoalName(goalRequestDTO.getGoalName());
+        goal.setGoalType(goalRequestDTO.getGoalType());
         goal.setTargetValue(goalRequestDTO.getTargetValue());
         goal.setStartDate(goalRequestDTO.getStartDate());
         goal.setEndDate(goalRequestDTO.getEndDate());

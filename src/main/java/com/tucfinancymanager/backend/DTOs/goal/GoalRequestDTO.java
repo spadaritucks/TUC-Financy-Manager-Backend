@@ -1,6 +1,8 @@
 package com.tucfinancymanager.backend.DTOs.goal;
 
 import com.tucfinancymanager.backend.ENUMs.GoalStatus;
+import com.tucfinancymanager.backend.ENUMs.GoalType;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -30,6 +32,10 @@ public class GoalRequestDTO {
     @Size(min = 3, max = 100, message = "O nome da meta deve ter entre 3 e 100 caracteres")
     @Schema(example = "Juntar 100 reais por mês", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nome da Meta")
     private String goalName;
+
+    @NotNull(message = "O tipo da metá é obrigatório")
+    @Schema(example = "INCOME", requiredMode = Schema.RequiredMode.REQUIRED, description = "Tipo da meta, valores possiveis : INCOME, EXPENSE")
+    private GoalType goalType;
 
     @NotNull(message = "O valor da meta é obrigatório")
     @Positive(message = "O valor da meta deve ser maior que zero")

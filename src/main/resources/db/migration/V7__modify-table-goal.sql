@@ -1,0 +1,2 @@
+ALTER TABLE goals
+ADD COLUMN goal_type VARCHAR(50) 

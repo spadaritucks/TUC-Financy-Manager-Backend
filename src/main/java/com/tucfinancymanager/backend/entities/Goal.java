@@ -1,6 +1,8 @@
 package com.tucfinancymanager.backend.entities;
 
 import com.tucfinancymanager.backend.ENUMs.GoalStatus;
+import com.tucfinancymanager.backend.ENUMs.GoalType;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +35,12 @@ public class Goal {
     private String goalName;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private GoalType goalType;
+
+    @Column(nullable = false)
     private Double targetValue;
+
 
     @Column(nullable = false)
     private LocalDateTime startDate;
