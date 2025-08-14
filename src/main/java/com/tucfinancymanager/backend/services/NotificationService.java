@@ -7,55 +7,44 @@ import com.tucfinancymanager.backend.repositories.GoalRepository;
 import com.tucfinancymanager.backend.repositories.NotificationRepository;
 import com.tucfinancymanager.backend.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Component
 public class NotificationService {
 
-    @Autowired
-    private NotificationRepository notificationRepository;
+  @Autowired
+  private NotificationRepository notificationRepository;
 
-    @Autowired
-    private GoalRepository goalRepository;
+  @Autowired
+  private GoalRepository goalRepository;
 
-    @Autowired
-    private UsersRepository usersRepository;
+  @Autowired
+  private EmailService emailService;
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+  LocalDateTime today = LocalDateTime.now();
 
+  // @Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
+  public void expireGoal() {
 
-    LocalDateTime today = LocalDateTime.now();
+    var goals = this.goalRepository.findExpiredEndDate(today);
+    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", new Locale("pt", "BR"));
 
+    for (Goal goal : goals) {
+      String subject = "Sua meta " + goal.getGoalName() + " expirou!";
+      String body = "A sua meta de " + "<strong>" + goal.getGoalName()  + "</strong>" + " expirou no dia " +
+          dateFormat.format(goal.getEndDate());
 
-    @Scheduled(fixedDelay = 120)
-    public void expireGoal() {
-
-
-        var goals = this.goalRepository.findExpiredEndDate(today);
-
-        for (Goal goal : goals) {
-            NotificationRequestDTO notificationRequestDTO = new NotificationRequestDTO();
-            notificationRequestDTO.setUserId(goal.getUser().getId());
-            notificationRequestDTO.setNotificationType(NotificationTypeEnum.Goal);
-            notificationRequestDTO.setTitle("Sua meta expirou!");
-            notificationRequestDTO.setMessage("Sua meta " + goal.getGoalName() + " expirou, acompanhe seu desempenho!");
-
-            String email = goal.getUser().getEmail();
-
-            messagingTemplate.convertAndSendToUser(
-                    email,
-                    "/user/queue/notifications",
-                    notificationRequestDTO
-            );
-
-        }
+      emailService.sendMail(goal.getUser().getEmail(), goal.getUser().getName(), subject, body);
     }
+  }
 
+ 
 
 }
+
