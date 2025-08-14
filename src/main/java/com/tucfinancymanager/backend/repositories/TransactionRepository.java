@@ -1,5 +1,6 @@
 package com.tucfinancymanager.backend.repositories;
 
+import com.tucfinancymanager.backend.DTOs.transaction.TransactionAmountDTO;
 import com.tucfinancymanager.backend.entities.Transaction;
 
 import org.springframework.data.domain.Page;
@@ -8,7 +9,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
@@ -32,18 +37,25 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             @Param("endDate") LocalDate endDate,
             @Param("minValue") Double minValue,
             @Param("maxValue") Double maxValue,
-            @Param ("subcategory") String subcategory,
+            @Param("subcategory") String subcategory,
             Pageable pageable);
 
-    @Query(value = "SELECT SUM(transaction_value) FROM transactions " +
-            "WHERE user_id = :userId " +
-            "AND transaction_type = :transactionType " +
-            "AND transaction_date >= :startDate " +
-            "AND transaction_date <= :endDate ", nativeQuery = true)
-    Double findMonthCurrentTransactionAmountByUserId(
+    @Query(value = """
+            SELECT
+                SUM(CASE WHEN transaction_type = 'INCOME' THEN transaction_value ELSE 0 END) AS income,
+                SUM(CASE WHEN transaction_type = 'EXPENSE' THEN transaction_value ELSE 0 END) AS expense,
+                SUM(CASE WHEN transaction_type = 'INCOME' THEN transaction_value ELSE 0 END) -
+                SUM(CASE WHEN transaction_type = 'EXPENSE' THEN transaction_value ELSE 0 END) AS total
+            FROM
+                transactions
+            WHERE
+                user_id = :userId
+                AND transaction_date >= :startDate
+                AND transaction_date <= :endDate
+                                        """, nativeQuery = true)
+    Map<String, BigDecimal> findMonthCurrentTransactionAmountByUserId(
             @Param("userId") UUID userId,
             @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
-            @Param("transactionType") String transactionType);
+            @Param("endDate") LocalDate endDate);
 
 }

@@ -1,5 +1,6 @@
 package com.tucfinancymanager.backend.controllers;
 
+import com.tucfinancymanager.backend.DTOs.goal.GoalCountDTO;
 import com.tucfinancymanager.backend.DTOs.goal.GoalRequestDTO;
 import com.tucfinancymanager.backend.DTOs.goal.GoalRequestUpdateDTO;
 import com.tucfinancymanager.backend.DTOs.goal.GoalResponseDTO;
@@ -50,9 +51,8 @@ public class GoalController {
 
         @GetMapping("/count-goals")
         @Operation(summary = "Contagem das Metas do usuario de acordo com o status", description = "Essa função é responsável por retornar a quantia de metas do usuario de acordo com o status")
-        public ResponseEntity<Integer> getGoalsCountByStatus(@RequestParam UUID userId,
-                        @RequestParam String goalStatus) {
-                var result = this.goalService.getGoalsCountByStatus(userId, goalStatus);
+        public ResponseEntity<GoalCountDTO> getGoalsCountByStatus(@RequestParam UUID userId) {
+                var result = this.goalService.getGoalsCountByStatus(userId);
                 return new ResponseEntity<>(result, HttpStatus.OK);
         }
 

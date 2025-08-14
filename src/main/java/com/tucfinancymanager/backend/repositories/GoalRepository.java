@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,13 +35,14 @@ public interface GoalRepository extends JpaRepository<Goal, UUID> {
                         Pageable pageable);
 
         @Query(value = """
-                        SELECT COUNT(*) FROM goals
+                        SELECT
+                        COUNT(CASE WHEN goal_status = 'InProgress' THEN 1 END) AS inProgress,
+                        COUNT(CASE WHEN goal_status = 'completed' THEN 1 END) AS completed,
+                        COUNT(CASE WHEN goal_status = 'expired' THEN 1 END) AS expired
+                        FROM goals
                         WHERE user_id = :userId
-                        AND goal_status = :goalStatus
                         """, nativeQuery = true)
-        Integer findGoalsCountByStatus(
-                        @Param("userId") UUID userId,
-                        @Param("goalStatus") String goalStatus);
+        Map<String, Long> findGoalsCountByStatus(@Param("userId") UUID userId);
 
         @Query("SELECT g FROM goals g WHERE g.endDate < :today")
         List<Goal> findExpiredEndDate(LocalDateTime today);

@@ -3,6 +3,7 @@ package com.tucfinancymanager.backend.services;
 import com.tucfinancymanager.backend.DTOs.category.CategoryResponseDTO;
 import com.tucfinancymanager.backend.DTOs.pagination.PageResponseDTO;
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryResponseDTO;
+import com.tucfinancymanager.backend.DTOs.transaction.TransactionAmountDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionRequestDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionResponseDTO;
 import com.tucfinancymanager.backend.entities.Transaction;
@@ -16,7 +17,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -100,13 +104,18 @@ public class TransactionService {
                 return pageResponseDTO;
         }
 
-        public Double getMonthCurrentTransactionAmountByUserId(UUID userId, int month, int year,
-                        String transactionType) {
+        public TransactionAmountDTO getMonthCurrentTransactionAmountByUserId(UUID userId, int month, int year) {
                 LocalDate startDate = LocalDate.of(year, month, 1);
                 LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
-                var result = this.transactionRepository.findMonthCurrentTransactionAmountByUserId(userId, startDate,
-                                endDate, transactionType);
-                return result;
+                Map<String, BigDecimal> result = this.transactionRepository
+                                .findMonthCurrentTransactionAmountByUserId(userId, startDate, endDate);
+
+                TransactionAmountDTO transactionAmountDTO = new TransactionAmountDTO();
+                transactionAmountDTO.setIncome(result.get("income"));
+                transactionAmountDTO.setExpense(result.get("expense"));
+                transactionAmountDTO.setTotal(result.get("total"));
+
+                return transactionAmountDTO;
         }
 
         public TransactionResponseDTO createTransaction(TransactionRequestDTO transactionRequestDTO) {

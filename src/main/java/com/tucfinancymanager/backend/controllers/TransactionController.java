@@ -1,6 +1,7 @@
 package com.tucfinancymanager.backend.controllers;
 
 import com.tucfinancymanager.backend.DTOs.pagination.PageResponseDTO;
+import com.tucfinancymanager.backend.DTOs.transaction.TransactionAmountDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionRequestDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionResponseDTO;
 import com.tucfinancymanager.backend.services.TransactionService;
@@ -53,13 +54,12 @@ public class TransactionController {
 
         @GetMapping("/month-amount")
         @Operation(summary = "Retornar os valores de entrada e saida do mês do usuario", description = "Essa função é responsável retornar os valores de entrada ou saida do mês do usuario dependendo do tipo da transação")
-        public ResponseEntity<Double> getMonthCurrentTransactionAmountByUserId(
+        public ResponseEntity<TransactionAmountDTO> getMonthCurrentTransactionAmountByUserId(
                         @RequestParam UUID userId,
                         @RequestParam int month,
-                        @RequestParam int year,
-                        @RequestParam String transactionType) {
-                var result = this.transactionService.getMonthCurrentTransactionAmountByUserId(userId, month, year,
-                                transactionType);
+                        @RequestParam int year
+                     ) {
+                var result = this.transactionService.getMonthCurrentTransactionAmountByUserId(userId, month, year);
                 return new ResponseEntity<>(result, HttpStatus.OK);
         }
 

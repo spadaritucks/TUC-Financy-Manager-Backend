@@ -6,6 +6,7 @@ import com.tucfinancymanager.backend.DTOs.pagination.PageResponseDTO;
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryResponseDTO;
 import com.tucfinancymanager.backend.ENUMs.GoalStatus;
 import com.tucfinancymanager.backend.DTOs.category.CategoryResponseDTO;
+import com.tucfinancymanager.backend.DTOs.goal.GoalCountDTO;
 import com.tucfinancymanager.backend.DTOs.goal.GoalRequestDTO;
 import com.tucfinancymanager.backend.entities.Goal;
 import com.tucfinancymanager.backend.exceptions.ConflictException;
@@ -89,9 +90,15 @@ public class GoalService {
         return pageResponseDTO;
     }
 
-    public Integer getGoalsCountByStatus(UUID userId, String goalStatus) {
-        var result = this.goalRepository.findGoalsCountByStatus(userId, goalStatus);
-        return result;
+    public GoalCountDTO getGoalsCountByStatus(UUID userId) {
+        var result = this.goalRepository.findGoalsCountByStatus(userId);
+        GoalCountDTO goalCountDTO = new GoalCountDTO();
+
+        goalCountDTO.setInProgress(result.get("inProgress"));
+        goalCountDTO.setCompleted(result.get("completed"));
+        goalCountDTO.setExpired(result.get("expired"));
+
+        return goalCountDTO;
     }
 
     public GoalResponseDTO createGoal(GoalRequestDTO goalRequestDTO) {
