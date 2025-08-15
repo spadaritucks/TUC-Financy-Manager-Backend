@@ -6,10 +6,12 @@ import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryRequestDTO;
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryRequestUpdateDTO;
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryResponseDTO;
 import com.tucfinancymanager.backend.entities.SubCategory;
+import com.tucfinancymanager.backend.entities.User;
 import com.tucfinancymanager.backend.exceptions.ConflictException;
 import com.tucfinancymanager.backend.exceptions.NotFoundException;
 import com.tucfinancymanager.backend.repositories.CategoryRepository;
 import com.tucfinancymanager.backend.repositories.SubCategoryRepository;
+import com.tucfinancymanager.backend.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,11 +29,15 @@ public class SubCategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private UsersRepository usersRepository;
+
     private SubCategoryResponseDTO newResponseService(SubCategory subcategory) {
 
         CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO(
                 subcategory.getCategory().getId(),
                 subcategory.getCategory().getCategoryName(),
+                subcategory.getCategory().getUser().getId(),
                 subcategory.getCategory().getCreatedAt(),
                 subcategory.getCategory().getUpdatedAt());
 
@@ -39,14 +45,15 @@ public class SubCategoryService {
                 subcategory.getId(),
                 subcategory.getCategory().getId(),
                 subcategory.getSubcategoryName(),
+                subcategory.getUser().getId(),
                 subcategory.getCreatedAt(),
                 subcategory.getUpdatedAt(),
                 categoryResponseDTO
                 );
     }
 
-    public PageResponseDTO<SubCategoryResponseDTO> getAllSubCategories(int page, int size) {
-        Page<SubCategory> subcategories = this.subCategoryRepository.findAll(PageRequest.of(page, size));
+    public PageResponseDTO<SubCategoryResponseDTO> getAllSubCategoriesByUserId(UUID userId, int page, int size) {
+        Page<SubCategory> subcategories = this.subCategoryRepository.findByUserId(userId, PageRequest.of(page, size));
 
         var result = subcategories.getContent().stream().map(this::newResponseService).toList();
 
@@ -59,31 +66,44 @@ public class SubCategoryService {
                 result);
 
         return pageResponseDTO;
+    }
 
+    public List<SubCategoryResponseDTO> getAllSubCategoriesByUserId(UUID userId) {
+        List<SubCategory> subcategories = this.subCategoryRepository.findByUserId(userId);
+        return subcategories.stream().map(this::newResponseService).toList();
     }
 
     public SubCategoryResponseDTO createSubCategory(SubCategoryRequestDTO subCategoryRequestDTO) {
+        // Verificar se o usuário existe
+        User user = this.usersRepository.findById(subCategoryRequestDTO.getUserId())
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+
+        // Verificar se a subcategoria já existe para este usuário
         var subCategoryExists = this.subCategoryRepository
-                .getBySubcategoryName(subCategoryRequestDTO.getSubcategoryName());
+                .getBySubcategoryNameAndUserId(subCategoryRequestDTO.getSubcategoryName(), subCategoryRequestDTO.getUserId());
         if (subCategoryExists.isPresent()) {
-            throw new ConflictException("A subcategoria já existe no sistema");
+            throw new ConflictException("A subcategoria já existe para este usuário");
         }
-        var category = this.categoryRepository.findById(subCategoryRequestDTO.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
+
+        // Verificar se a categoria existe e pertence ao usuário
+        var category = this.categoryRepository.findByIdAndUserId(
+                subCategoryRequestDTO.getCategoryId(), 
+                subCategoryRequestDTO.getUserId()
+        ).orElseThrow(() -> new NotFoundException("Categoria não encontrada para este usuário"));
 
         SubCategory subCategory = new SubCategory();
         subCategory.setCategory(category);
         subCategory.setSubcategoryName(subCategoryRequestDTO.getSubcategoryName());
+        subCategory.setUser(user);
 
         subCategoryRepository.save(subCategory);
 
         return newResponseService(subCategory);
-
     }
 
-    public SubCategoryResponseDTO updateSubCategory(UUID id, SubCategoryRequestUpdateDTO subCategoryRequestUpdateDTO) {
-        var subCategory = this.subCategoryRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("A subcategoria não existe"));
+    public SubCategoryResponseDTO updateSubCategory(UUID id, UUID userId, SubCategoryRequestUpdateDTO subCategoryRequestUpdateDTO) {
+        var subCategory = this.subCategoryRepository.findByIdAndUserId(id, userId).orElseThrow(
+                () -> new NotFoundException("A subcategoria não existe para este usuário"));
 
         if (subCategoryRequestUpdateDTO.getSubcategoryName() != null)
             subCategory.setSubcategoryName(subCategoryRequestUpdateDTO.getSubcategoryName());
@@ -93,9 +113,9 @@ public class SubCategoryService {
         return newResponseService(subCategory);
     }
 
-    public SubCategoryResponseDTO deleteSubCategory(UUID id) {
-        var subCategory = this.subCategoryRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("A subcategoria não existe"));
+    public SubCategoryResponseDTO deleteSubCategory(UUID id, UUID userId) {
+        var subCategory = this.subCategoryRepository.findByIdAndUserId(id, userId).orElseThrow(
+                () -> new NotFoundException("A subcategoria não existe para este usuário"));
 
         subCategoryRepository.delete(subCategory);
 

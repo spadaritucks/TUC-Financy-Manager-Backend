@@ -28,6 +28,10 @@ public class SubCategory {
     @Column(nullable = false)
     private String subcategoryName;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @CreationTimestamp
     private Timestamp createdAt;
 

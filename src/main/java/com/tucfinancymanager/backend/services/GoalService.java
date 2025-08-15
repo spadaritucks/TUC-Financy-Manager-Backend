@@ -13,11 +13,13 @@ import com.tucfinancymanager.backend.exceptions.ConflictException;
 import com.tucfinancymanager.backend.exceptions.NotFoundException;
 import com.tucfinancymanager.backend.repositories.GoalRepository;
 import com.tucfinancymanager.backend.repositories.SubCategoryRepository;
+import com.tucfinancymanager.backend.repositories.TransactionRepository;
 import com.tucfinancymanager.backend.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -30,6 +32,9 @@ public class GoalService {
     private UsersRepository usersRepository;
 
     @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
     private SubCategoryRepository subCategoryRepository;
 
     private GoalResponseDTO newResponseService(Goal goal) {
@@ -37,6 +42,7 @@ public class GoalService {
         CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO(
                 goal.getSubCategory().getCategory().getId(),
                 goal.getSubCategory().getCategory().getCategoryName(),
+                goal.getSubCategory().getCategory().getUser().getId(),
                 goal.getSubCategory().getCategory().getCreatedAt(),
                 goal.getSubCategory().getCategory().getUpdatedAt());
 
@@ -44,9 +50,29 @@ public class GoalService {
                 goal.getSubCategory().getId(),
                 goal.getSubCategory().getCategory().getId(),
                 goal.getSubCategory().getSubcategoryName(),
+                goal.getSubCategory().getUser().getId(),
                 goal.getSubCategory().getCreatedAt(),
                 goal.getSubCategory().getUpdatedAt(),
                 categoryResponseDTO);
+
+        List<Object[]> currentAmount = this.transactionRepository.findAmountCurrentTransactionsBySubCategory(
+                goal.getUser().getId(),
+                goal.getStartDate().toLocalDate(),
+                goal.getEndDate().toLocalDate());
+
+  
+        Double currentAmountValue = 0.0;
+        
+        for (Object[] result : currentAmount) {
+            String subcategoryName = (String) result[0];
+            Double spentAmount = ((Number) result[1]).doubleValue();
+            
+            
+            if (subcategoryName.equals(goal.getSubCategory().getSubcategoryName())) {
+                currentAmountValue = spentAmount;
+                break; 
+            }
+        }
 
         return new GoalResponseDTO(
                 goal.getId(),
@@ -60,7 +86,8 @@ public class GoalService {
                 goal.getGoalStatus(),
                 goal.getCreatedAt(),
                 goal.getUpdatedAt(),
-                subCategoryResponseDTO);
+                subCategoryResponseDTO,
+                currentAmountValue);
     }
 
     public PageResponseDTO<GoalResponseDTO> getGoalsByUserId(
@@ -77,7 +104,8 @@ public class GoalService {
 
         var goals = this.goalRepository.findByuserId(userId, concatenedSubcategory, concatenedGoalName, status,
                 PageRequest.of(page, size));
-        var result = goals.stream().map(this::newResponseService).toList();
+
+        var result = goals.stream().map(row -> newResponseService(row)).toList();
 
         PageResponseDTO<GoalResponseDTO> pageResponseDTO = new PageResponseDTO<>(
                 goals.getNumber(),
@@ -106,12 +134,15 @@ public class GoalService {
                 .orElseThrow(
                         () -> new NotFoundException("O usuario não existe"));
 
-        var subcategory = this.subCategoryRepository.findById(goalRequestDTO.getSubCategoryId())
+        var subcategory = this.subCategoryRepository.findByIdAndUserId(
+                goalRequestDTO.getSubCategoryId(), 
+                goalRequestDTO.getUserId())
                 .orElseThrow(
-                        () -> new NotFoundException("A subcategoria não existe"));
-        var goalExists = this.goalRepository.findBygoalName(goalRequestDTO.getGoalName());
+                        () -> new NotFoundException("A subcategoria não existe para este usuário"));
+        
+        var goalExists = this.goalRepository.findByGoalNameAndUserId(goalRequestDTO.getGoalName(), goalRequestDTO.getUserId());
         if (goalExists.isPresent()) {
-            throw new ConflictException("A meta já existe");
+            throw new ConflictException("A meta já existe para este usuário");
         }
 
         Goal goal = new Goal();
@@ -130,9 +161,9 @@ public class GoalService {
         return newResponseService(goal);
     }
 
-    public GoalResponseDTO updateGoalStatus(UUID id, GoalRequestUpdateDTO goalRequestUpdateDTO) {
-        var goal = this.goalRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("A Meta não existe"));
+    public GoalResponseDTO updateGoalStatus(UUID id, UUID userId, GoalRequestUpdateDTO goalRequestUpdateDTO) {
+        var goal = this.goalRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new NotFoundException("A Meta não existe para este usuário"));
 
         if (goalRequestUpdateDTO.getGoalName() != null)
             goal.setGoalName(goalRequestUpdateDTO.getGoalName());
@@ -149,9 +180,9 @@ public class GoalService {
         return newResponseService(goal);
     }
 
-    public GoalResponseDTO deleteGoal(UUID id) {
-        var goal = this.goalRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("A Transação não existe"));
+    public GoalResponseDTO deleteGoal(UUID id, UUID userId) {
+        var goal = this.goalRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new NotFoundException("A Meta não existe para este usuário"));
 
         goalRepository.delete(goal);
 

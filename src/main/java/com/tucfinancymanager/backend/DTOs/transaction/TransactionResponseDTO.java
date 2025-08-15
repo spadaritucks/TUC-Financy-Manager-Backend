@@ -1,10 +1,8 @@
 package com.tucfinancymanager.backend.DTOs.transaction;
 
 import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryResponseDTO;
-import com.tucfinancymanager.backend.DTOs.user.UserResponseDTO;
 import com.tucfinancymanager.backend.ENUMs.TransactionRecurrenceFrequencyEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
-import com.tucfinancymanager.backend.entities.SubCategory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

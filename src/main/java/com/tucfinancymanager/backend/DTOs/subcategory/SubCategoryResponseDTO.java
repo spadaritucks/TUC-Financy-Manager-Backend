@@ -15,7 +15,7 @@ import com.tucfinancymanager.backend.DTOs.category.CategoryResponseDTO;
 @NoArgsConstructor
 public class SubCategoryResponseDTO {
 
-    @Schema(description = "Identificador do usuário", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+    @Schema(description = "Identificador da subcategoria", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
     private UUID id;
 
     @Schema(example = "123e4567-e89b-12d3-a456-426614174000", description = "Id da Categoria")
@@ -23,6 +23,9 @@ public class SubCategoryResponseDTO {
 
     @Schema(example = "Restaurante", description = "Nome da subcategoria")
     private String subcategoryName;
+
+    @Schema(description = "Identificador do usuário", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+    private UUID userId;
 
     @Schema(description = "Registro de quanto a criação foi feita", example = "2025-06-16T14:21:00.914+00:00")
     private Timestamp created_at;

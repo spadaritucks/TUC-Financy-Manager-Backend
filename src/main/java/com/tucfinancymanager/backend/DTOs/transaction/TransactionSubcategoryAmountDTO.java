@@ -1,0 +1,18 @@
+package com.tucfinancymanager.backend.DTOs.transaction;
+
+import java.math.BigDecimal;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class TransactionSubcategoryAmountDTO {
+
+   private String subcategoryName;
+
+   private BigDecimal amount;
+
+}

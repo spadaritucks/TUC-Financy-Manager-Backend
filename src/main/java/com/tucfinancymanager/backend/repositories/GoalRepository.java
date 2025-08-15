@@ -15,8 +15,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+
 public interface GoalRepository extends JpaRepository<Goal, UUID> {
         Optional<Goal> findBygoalName(String goalName);
+
+        Optional<Goal> findByIdAndUserId(UUID id, UUID userId);
+
+        Optional<Goal> findByGoalNameAndUserId(String goalName, UUID userId);
 
         @Query(value = """
                         SELECT g from goals g
@@ -43,6 +48,20 @@ public interface GoalRepository extends JpaRepository<Goal, UUID> {
                         WHERE user_id = :userId
                         """, nativeQuery = true)
         Map<String, Long> findGoalsCountByStatus(@Param("userId") UUID userId);
+
+
+        @Query(value = """
+                SELECT g from goals g
+                JOIN FETCH g.subCategory s
+                JOIN FETCH s.category c
+                WHERE g.user.id = :userId
+                AND g.goalType = :goalType
+                                """)
+        List<Goal> findUserGoalsByGoalType(
+                @Param("userId") UUID userId,
+                @Param("goalType") UUID goalType
+        );
+       
 
         @Query("SELECT g FROM goals g WHERE g.endDate < :today")
         List<Goal> findExpiredEndDate(LocalDateTime today);

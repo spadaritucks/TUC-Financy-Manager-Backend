@@ -24,6 +24,10 @@ public class Category {
     @Column(nullable = false)
     private String categoryName;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @CreationTimestamp
     private Timestamp createdAt;
 

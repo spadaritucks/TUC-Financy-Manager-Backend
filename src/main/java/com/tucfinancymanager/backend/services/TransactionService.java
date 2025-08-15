@@ -6,6 +6,7 @@ import com.tucfinancymanager.backend.DTOs.subcategory.SubCategoryResponseDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionAmountDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionRequestDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionResponseDTO;
+import com.tucfinancymanager.backend.DTOs.transaction.TransactionSubcategoryAmountDTO;
 import com.tucfinancymanager.backend.entities.Transaction;
 import com.tucfinancymanager.backend.exceptions.NotFoundException;
 import com.tucfinancymanager.backend.repositories.SubCategoryRepository;
@@ -35,11 +36,14 @@ public class TransactionService {
         @Autowired
         private SubCategoryRepository subCategoryRepository;
 
+
+
         private TransactionResponseDTO newResponseService(Transaction transaction) {
 
                 CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO(
                                 transaction.getSubCategory().getCategory().getId(),
                                 transaction.getSubCategory().getCategory().getCategoryName(),
+                                transaction.getSubCategory().getCategory().getUser().getId(),
                                 transaction.getSubCategory().getCategory().getCreatedAt(),
                                 transaction.getSubCategory().getCategory().getUpdatedAt());
 
@@ -47,6 +51,7 @@ public class TransactionService {
                                 transaction.getSubCategory().getId(),
                                 transaction.getSubCategory().getCategory().getId(),
                                 transaction.getSubCategory().getSubcategoryName(),
+                                transaction.getSubCategory().getUser().getId(),
                                 transaction.getSubCategory().getCreatedAt(),
                                 transaction.getSubCategory().getUpdatedAt(),
                                 categoryResponseDTO);
@@ -118,14 +123,31 @@ public class TransactionService {
                 return transactionAmountDTO;
         }
 
+        public List<TransactionSubcategoryAmountDTO> getAmountCurrentTransactionsBySubCategory(UUID userId, int month, int year) {
+
+                LocalDate startDate = LocalDate.of(year, month, 1);
+                LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+                List<Object[]> result = this.transactionRepository.findAmountCurrentTransactionsBySubCategory(userId, startDate, endDate);
+
+                return result.stream()
+                        .map(row -> new TransactionSubcategoryAmountDTO(
+                                (String) row[0],        // subcategory_name
+                                (BigDecimal) row[1]    // spent
+                        ))
+                        .toList();
+        }
+
         public TransactionResponseDTO createTransaction(TransactionRequestDTO transactionRequestDTO) {
                 var user = this.usersRepository.findById(transactionRequestDTO.getUserId())
                                 .orElseThrow(
                                                 () -> new NotFoundException("O usuario não existe"));
 
-                var subcategory = this.subCategoryRepository.findById(transactionRequestDTO.getSubCategoryId())
+                var subcategory = this.subCategoryRepository.findByIdAndUserId(
+                        transactionRequestDTO.getSubCategoryId(), 
+                        transactionRequestDTO.getUserId())
                                 .orElseThrow(
-                                                () -> new NotFoundException("A subcategoria não existe"));
+                                                () -> new NotFoundException("A subcategoria não existe para este usuário"));
 
                 Transaction transaction = new Transaction();
 
@@ -144,9 +166,9 @@ public class TransactionService {
                 return newResponseService(transaction);
         }
 
-        public TransactionResponseDTO deleteTransaction(UUID id) {
-                var transaction = this.transactionRepository.findById(id)
-                                .orElseThrow(() -> new NotFoundException("A Transação não existe"));
+        public TransactionResponseDTO deleteTransaction(UUID id, UUID userId) {
+                var transaction = this.transactionRepository.findByIdAndUserId(id, userId)
+                                .orElseThrow(() -> new NotFoundException("A Transação não existe para este usuário"));
 
                 transactionRepository.delete(transaction);
 

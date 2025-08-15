@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,7 +36,6 @@ public class GoalResponseDTO {
 
     @Schema(example = "2000.00", description = "Valor da meta")
     private Double targetValue;
-    
 
     @Schema(example = "2025-01-01T00:00:00", description = "Data inicial da meta (formato: yyyy-MM-dd'T'HH:mm:ss)")
     private LocalDateTime startDate;
@@ -54,4 +54,7 @@ public class GoalResponseDTO {
 
     @Schema(description = "Dados da subcategoria vinculada na transação")
     private SubCategoryResponseDTO subcategory;
+    
+    @Schema(description = "Valor atual acumulado para a meta", example = "150.00")
+    private Double currentAmount;
 }

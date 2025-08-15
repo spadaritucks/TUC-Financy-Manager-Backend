@@ -1,6 +1,5 @@
 package com.tucfinancymanager.backend.repositories;
 
-import com.tucfinancymanager.backend.DTOs.transaction.TransactionAmountDTO;
 import com.tucfinancymanager.backend.entities.Transaction;
 
 import org.springframework.data.domain.Page;
@@ -17,6 +16,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
+
+    Optional<Transaction> findByIdAndUserId(UUID id, UUID userId);
 
     @Query("""
                 SELECT t
@@ -54,6 +55,21 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
                 AND transaction_date <= :endDate
                                         """, nativeQuery = true)
     Map<String, BigDecimal> findMonthCurrentTransactionAmountByUserId(
+            @Param("userId") UUID userId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
+
+    @Query(value = """
+            SELECT s.subcategory_name AS subcategory,
+            COALESCE(SUM(t.transaction_value), 0) AS spent
+            FROM transactions t
+            JOIN subcategories s ON t.subcategory_id = s.id
+            WHERE t.user_id = :userId
+            AND t.transaction_date BETWEEN :startDate AND :endDate
+             GROUP BY s.subcategory_name
+             ORDER BY s.subcategory_name
+                     """, nativeQuery = true)
+    List<Object[]> findAmountCurrentTransactionsBySubCategory(
             @Param("userId") UUID userId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
