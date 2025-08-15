@@ -52,40 +52,26 @@ public class SubCategoryService {
                 );
     }
 
-    public PageResponseDTO<SubCategoryResponseDTO> getAllSubCategoriesByUserId(UUID userId, int page, int size) {
-        Page<SubCategory> subcategories = this.subCategoryRepository.findByUserId(userId, PageRequest.of(page, size));
 
-        var result = subcategories.getContent().stream().map(this::newResponseService).toList();
-
-        PageResponseDTO<SubCategoryResponseDTO> pageResponseDTO = new PageResponseDTO<>(
-                subcategories.getNumber(),
-                subcategories.getSize(),
-                subcategories.getTotalElements(),
-                subcategories.getTotalPages(),
-                subcategories.isLast(),
-                result);
-
-        return pageResponseDTO;
-    }
 
     public List<SubCategoryResponseDTO> getAllSubCategoriesByUserId(UUID userId) {
         List<SubCategory> subcategories = this.subCategoryRepository.findByUserId(userId);
         return subcategories.stream().map(this::newResponseService).toList();
     }
 
-    public SubCategoryResponseDTO createSubCategory(SubCategoryRequestDTO subCategoryRequestDTO) {
+    public SubCategoryResponseDTO createSubCategory(SubCategoryRequestDTO subCategoryRequestDTO, UUID userId) {
         // Verificar se o usuário existe
-        User user = this.usersRepository.findById(subCategoryRequestDTO.getUserId())
+        User user = this.usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
 
         // Verificar se a subcategoria já existe para este usuário
         var subCategoryExists = this.subCategoryRepository
-                .getBySubcategoryNameAndUserId(subCategoryRequestDTO.getSubcategoryName(), subCategoryRequestDTO.getUserId());
+                .getBySubcategoryNameAndUserId(subCategoryRequestDTO.getSubcategoryName(), userId);
         if (subCategoryExists.isPresent()) {
             throw new ConflictException("A subcategoria já existe para este usuário");
         }
 
-        // Verificar se a categoria existe e pertence ao usuário
+      
         var category = this.categoryRepository.findByIdAndUserId(
                 subCategoryRequestDTO.getCategoryId(), 
                 subCategoryRequestDTO.getUserId()
@@ -101,7 +87,7 @@ public class SubCategoryService {
         return newResponseService(subCategory);
     }
 
-    public SubCategoryResponseDTO updateSubCategory(UUID id, UUID userId, SubCategoryRequestUpdateDTO subCategoryRequestUpdateDTO) {
+    public SubCategoryResponseDTO updateUserSubCategory(UUID id, UUID userId, SubCategoryRequestUpdateDTO subCategoryRequestUpdateDTO) {
         var subCategory = this.subCategoryRepository.findByIdAndUserId(id, userId).orElseThrow(
                 () -> new NotFoundException("A subcategoria não existe para este usuário"));
 
@@ -113,7 +99,7 @@ public class SubCategoryService {
         return newResponseService(subCategory);
     }
 
-    public SubCategoryResponseDTO deleteSubCategory(UUID id, UUID userId) {
+    public SubCategoryResponseDTO deleteUserSubCategory(UUID id, UUID userId) {
         var subCategory = this.subCategoryRepository.findByIdAndUserId(id, userId).orElseThrow(
                 () -> new NotFoundException("A subcategoria não existe para este usuário"));
 

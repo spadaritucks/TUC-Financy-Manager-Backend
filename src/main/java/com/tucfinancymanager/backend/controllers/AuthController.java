@@ -2,7 +2,6 @@ package com.tucfinancymanager.backend.controllers;
 
 import com.tucfinancymanager.backend.DTOs.auth.AuthRequestDTO;
 import com.tucfinancymanager.backend.DTOs.auth.AuthResponseDTO;
-import com.tucfinancymanager.backend.DTOs.category.CategoryResponseDTO;
 import com.tucfinancymanager.backend.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

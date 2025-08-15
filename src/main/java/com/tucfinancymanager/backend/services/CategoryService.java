@@ -10,7 +10,6 @@ import com.tucfinancymanager.backend.exceptions.NotFoundException;
 import com.tucfinancymanager.backend.repositories.CategoryRepository;
 import com.tucfinancymanager.backend.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,25 +34,21 @@ public class CategoryService {
         );
     }
 
-    public List<CategoryResponseDTO> getAllCategoryByUserId(UUID userId, int page, int size) {
-        var categories = this.categoryRepository.findByUserId(userId, PageRequest.of(page, size));
-        return categories.stream().map(this::newResponseService).toList();
-    }
 
-    public List<CategoryResponseDTO> getAllCategoryByUserId(UUID userId) {
+    public List<CategoryResponseDTO> getUserAllCategories(UUID userId) {
         var categories = this.categoryRepository.findByUserId(userId);
         return categories.stream().map(this::newResponseService).toList();
     }
 
-    public CategoryResponseDTO createCategory (CategoryRequestDTO categoryRequestDTO) {
+    public CategoryResponseDTO createUserCategory (CategoryRequestDTO categoryRequestDTO, UUID userId) {
         // Verificar se o usuário existe
-        User user = this.usersRepository.findById(categoryRequestDTO.getUserId())
+        User user = this.usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
 
         // Verificar se a categoria já existe para este usuário
         var categoryExists = this.categoryRepository.findByCategoryNameAndUserId(
                 categoryRequestDTO.getCategoryName(), 
-                categoryRequestDTO.getUserId()
+                userId
         );
         if(categoryExists.isPresent()){
             throw new ConflictException("A categoria já existe para este usuário");
@@ -67,7 +62,7 @@ public class CategoryService {
         return newResponseService(category);
     }
 
-    public CategoryResponseDTO updateCategory (UUID id, UUID userId, CategoryRequestUpdateDTO categoryRequestUpdateDTO) {
+    public CategoryResponseDTO updateUserCategory (UUID id, UUID userId, CategoryRequestUpdateDTO categoryRequestUpdateDTO) {
         var category = this.categoryRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new NotFoundException("A categoria não existe para este usuário"));
         

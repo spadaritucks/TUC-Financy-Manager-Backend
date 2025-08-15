@@ -12,7 +12,6 @@ import java.util.UUID;
 public interface SubCategoryRepository extends JpaRepository<SubCategory, UUID> {
     Optional<SubCategory> getBySubcategoryNameAndUserId(String subcategoryName, UUID userId);
     List<SubCategory> findByUserId(UUID userId);
-    Page<SubCategory> findByUserId(UUID userId, Pageable pageable);
     Optional<SubCategory> findByIdAndUserId(UUID id, UUID userId);
     List<SubCategory> findByCategoryIdAndUserId(UUID categoryId, UUID userId);
 }
