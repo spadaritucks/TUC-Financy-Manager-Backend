@@ -43,7 +43,7 @@ public class TransactionService {
                 CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO(
                                 transaction.getSubCategory().getCategory().getId(),
                                 transaction.getSubCategory().getCategory().getCategoryName(),
-                                transaction.getSubCategory().getCategory().getUser().getId(),
+                                transaction.getUser().getId(),
                                 transaction.getSubCategory().getCategory().getCreatedAt(),
                                 transaction.getSubCategory().getCategory().getUpdatedAt());
 
@@ -51,7 +51,7 @@ public class TransactionService {
                                 transaction.getSubCategory().getId(),
                                 transaction.getSubCategory().getCategory().getId(),
                                 transaction.getSubCategory().getSubcategoryName(),
-                                transaction.getSubCategory().getUser().getId(),
+                                transaction.getUser().getId(),
                                 transaction.getSubCategory().getCreatedAt(),
                                 transaction.getSubCategory().getUpdatedAt(),
                                 categoryResponseDTO);
@@ -129,11 +129,12 @@ public class TransactionService {
                 LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
                 List<Object[]> result = this.transactionRepository.findAmountCurrentTransactionsBySubCategory(userId, startDate, endDate);
-
+    
                 return result.stream()
                         .map(row -> new TransactionSubcategoryAmountDTO(
-                                (String) row[0],        // subcategory_name
-                                (BigDecimal) row[1]    // spent
+                                (String) row[0],   
+                                (String) row[1],  
+                                (BigDecimal) row[2]    
                         ))
                         .toList();
         }

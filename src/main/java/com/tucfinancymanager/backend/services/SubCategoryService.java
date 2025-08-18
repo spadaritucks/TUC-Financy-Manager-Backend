@@ -74,7 +74,7 @@ public class SubCategoryService {
       
         var category = this.categoryRepository.findByIdAndUserId(
                 subCategoryRequestDTO.getCategoryId(), 
-                subCategoryRequestDTO.getUserId()
+                userId
         ).orElseThrow(() -> new NotFoundException("Categoria não encontrada para este usuário"));
 
         SubCategory subCategory = new SubCategory();

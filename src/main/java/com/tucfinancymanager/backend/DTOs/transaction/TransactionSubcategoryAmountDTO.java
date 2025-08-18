@@ -13,6 +13,8 @@ public class TransactionSubcategoryAmountDTO {
 
    private String subcategoryName;
 
+   private String transactionType;
+
    private BigDecimal amount;
 
 }

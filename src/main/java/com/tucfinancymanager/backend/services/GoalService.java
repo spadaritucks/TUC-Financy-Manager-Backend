@@ -42,7 +42,7 @@ public class GoalService {
         CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO(
                 goal.getSubCategory().getCategory().getId(),
                 goal.getSubCategory().getCategory().getCategoryName(),
-                goal.getSubCategory().getCategory().getUser().getId(),
+                goal.getUser().getId(),
                 goal.getSubCategory().getCategory().getCreatedAt(),
                 goal.getSubCategory().getCategory().getUpdatedAt());
 
@@ -50,7 +50,7 @@ public class GoalService {
                 goal.getSubCategory().getId(),
                 goal.getSubCategory().getCategory().getId(),
                 goal.getSubCategory().getSubcategoryName(),
-                goal.getSubCategory().getUser().getId(),
+                goal.getUser().getId(),
                 goal.getSubCategory().getCreatedAt(),
                 goal.getSubCategory().getUpdatedAt(),
                 categoryResponseDTO);
@@ -65,7 +65,7 @@ public class GoalService {
         
         for (Object[] result : currentAmount) {
             String subcategoryName = (String) result[0];
-            Double spentAmount = ((Number) result[1]).doubleValue();
+            Double spentAmount = ((Number) result[2]).doubleValue();
             
             
             if (subcategoryName.equals(goal.getSubCategory().getSubcategoryName())) {

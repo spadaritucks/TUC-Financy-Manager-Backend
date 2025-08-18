@@ -20,7 +20,4 @@ public class CategoryRequestDTO {
     @Schema(example = "Alimentação", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nome da Categoria")
     private String categoryName;
 
-    @NotNull(message = "O ID do usuário é obrigatório")
-    @Schema(example = "123e4567-e89b-12d3-a456-426614174000", requiredMode = Schema.RequiredMode.REQUIRED, description = "ID do Usuário")
-    private UUID userId;
 }

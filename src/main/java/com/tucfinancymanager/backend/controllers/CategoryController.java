@@ -58,7 +58,6 @@ public class CategoryController {
             @RequestParam UUID userId,
             @RequestBody @Valid CategoryRequestDTO categoryRequestDTO) {
         
-        categoryRequestDTO.setUserId(userId);
         var result = this.categoryService.createUserCategory(categoryRequestDTO, userId);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

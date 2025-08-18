@@ -61,13 +61,14 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
 
     @Query(value = """
             SELECT s.subcategory_name AS subcategory,
+            t.transaction_type,
             COALESCE(SUM(t.transaction_value), 0) AS spent
             FROM transactions t
             JOIN subcategories s ON t.subcategory_id = s.id
             WHERE t.user_id = :userId
             AND t.transaction_date BETWEEN :startDate AND :endDate
-             GROUP BY s.subcategory_name
-             ORDER BY s.subcategory_name
+             GROUP BY s.subcategory_name, t.transaction_type
+             ORDER BY s.subcategory_name, t.transaction_type
                      """, nativeQuery = true)
     List<Object[]> findAmountCurrentTransactionsBySubCategory(
             @Param("userId") UUID userId,
