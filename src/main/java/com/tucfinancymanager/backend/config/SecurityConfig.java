@@ -38,6 +38,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/password-reset/send-code").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/password-reset/verify-code").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/password-reset/reset-password").permitAll()
                         .requestMatchers(SWAGGER_LIST).permitAll()
                         .anyRequest().authenticated()
                 )
