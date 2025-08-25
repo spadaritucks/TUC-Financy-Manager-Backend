@@ -34,7 +34,6 @@ import com.tucfinancymanager.backend.DTOs.transaction.TransactionAmountDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionRequestDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionResponseDTO;
 import com.tucfinancymanager.backend.DTOs.transaction.TransactionSubcategoryAmountDTO;
-import com.tucfinancymanager.backend.DTOs.transaction.TransactionSubcategoryAmountDTO;
 import com.tucfinancymanager.backend.ENUMs.TransactionRecurrenceFrequencyEnum;
 import com.tucfinancymanager.backend.ENUMs.TransactionTypeEnum;
 import com.tucfinancymanager.backend.entities.Category;
@@ -99,13 +98,11 @@ public class TransactionServiceTest {
         category.setCategoryName("Alimentação");
         category.setUser(user);
 
-        // Configurar SubCategory
         subCategory = new SubCategory();
         subCategory.setId(subCategoryId);
         subCategory.setSubcategoryName("Restaurante");
         subCategory.setCategory(category);
 
-        // Configurar Transaction
         transaction = new Transaction();
         transaction.setId(transactionId);
         transaction.setUser(user);
@@ -117,7 +114,6 @@ public class TransactionServiceTest {
         transaction.setRecurrent(false);
         transaction.setRecurrenceFrequency(TransactionRecurrenceFrequencyEnum.MONTHLY);
 
-        // Configurar CategoryResponseDTO
         categoryResponseDTO = new CategoryResponseDTO();
         categoryResponseDTO.setId(categoryId);
         categoryResponseDTO.setUserId(userId);
@@ -125,7 +121,6 @@ public class TransactionServiceTest {
         categoryResponseDTO.setCreated_at(now);
         categoryResponseDTO.setUpdated_at(now);
 
-        // Configurar SubCategoryResponseDTO
         subCategoryResponseDTO = new SubCategoryResponseDTO();
         subCategoryResponseDTO.setId(subCategoryId);
         subCategoryResponseDTO.setUserId(userId);
